@@ -22,5 +22,5 @@
         },
         "files": ["application/router.php","core/functions.php","core/common/ErrorHandler.php"]
     },
-    "minimum-stability": "dev"
+    "minimum-stability": "stable"
 }
