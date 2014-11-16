@@ -1,6 +1,6 @@
 <?php
-namespace eaglehorn;
-use eaglehorn\core\controller as ehController;
+namespace ajaxtown\eaglehorn_framework;
+use ajaxtown\eaglehorn_framework\core\controller as ehController;
 /**
  * EagleHorn
  *
@@ -28,11 +28,11 @@ class bootstrap
      */
     function __construct($base)
     {
-        $this->route_callback = core\controller\Router::execute();
+        $this->route_callback = ehController\Router::execute();
         $base->load->controller($this->route_callback[0], array(), $this->route_callback[1], $this->route_callback[2]);
     }
 
 }
-
+$t = __NAMESPACE__;
 $base = new ehController\Base($extended = false);
 new bootstrap($base);

@@ -1,8 +1,6 @@
 <?php
-namespace eaglehorn\core\controller;
+namespace ajaxtown\eaglehorn_framework\core\controller;
 
-use eaglehorn\core\worker as worker;
-use eaglehorn\core\assembly as assembly;
 
 /**
  * EagleHorn
@@ -86,7 +84,7 @@ class Loader
 
             }
 
-            $helper = $this->$class = $this->_createInstance('eaglehorn\core\worker\\', $class, $params, $method_name, $data);
+            $helper = $this->$class = $this->_createInstance('ajaxtown\eaglehorn_framework\core\worker\\', $class, $params, $method_name, $data);
         }
 
         return $helper;
@@ -97,7 +95,7 @@ class Loader
      * Adds the view in viewset. This viewset is later used for rendering
      * @param        $viewname
      * @param string $data
-     * @return \eaglehorn\core\controller\View
+     * @return View
      */
     public function view($viewname, $data = '')
     {
@@ -114,7 +112,7 @@ class Loader
      * @param string $template
      * @param array  $data
      * @param string $options
-     * @return \eaglehorn\core\controller\Template
+     * @return Template
      */
     public function template($template, $data = array(), $options = '')
     {
@@ -156,7 +154,7 @@ class Loader
             }
         }
 
-        return $this->_createInstance('eaglehorn\application\controller\\', $class, $params, $method_name, $data);
+        return $this->_createInstance('application\controller\\', $class, $params, $method_name, $data);
     }
 
     /**
@@ -192,7 +190,7 @@ class Loader
             }
         }
 
-        return $this->_createInstance('eaglehorn\application\model\\', $class, $params, $method_name, $data);
+        return $this->_createInstance('application\model\\', $class, $params, $method_name, $data);
     }
 
     public function assembly($assemble, $params = array(), $method_name = "", $data = array())
@@ -214,7 +212,7 @@ class Loader
 
             }
 
-            $assembly = $this->$class = $this->_createInstance('eaglehorn\core\assembly\\' . $class . '\\', $class, $params, $method_name, $data);
+            $assembly = $this->$class = $this->_createInstance('ajaxtown\eaglehorn_framework\core\assembly\\' . $class . '\\', $class, $params, $method_name, $data);
         }
 
         return $assembly;

@@ -1,4 +1,6 @@
-<?php namespace eaglehorn\core\worker;
+<?php
+namespace ajaxtown\eaglehorn_framework\core\worker;
+
 /**
  * EagleHorn
  *

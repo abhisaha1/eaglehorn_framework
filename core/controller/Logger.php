@@ -1,5 +1,5 @@
 <?php
-namespace eaglehorn\core\controller;
+namespace ajaxtown\eaglehorn_framework\core\controller;
 use Psr\Log\AbstractLogger;
 use Psr\Log\LogLevel;
 
@@ -76,12 +76,12 @@ class Logger extends AbstractLogger
         }
         $this->logFilePath = $logDirectory.DIRECTORY_SEPARATOR.'log_'.date('Y-m-d').'.txt';
         if (file_exists($this->logFilePath) && !is_writable($this->logFilePath)) {
-            throw new RuntimeException('The file could not be written to. Check that appropriate permissions have been set.');
+            throw new \RuntimeException('The file could not be written to. Check that appropriate permissions have been set.');
         }
 
         $this->fileHandle = fopen($this->logFilePath, 'a');
         if ( ! $this->fileHandle) {
-            throw new RuntimeException('The file could not be opened. Check permissions.');
+            throw new \RuntimeException('The file could not be opened. Check permissions.');
         }
     }
     /**
@@ -143,7 +143,7 @@ class Logger extends AbstractLogger
         $loggerConfig = configItem('logger');
         if (! is_null($this->fileHandle) && $loggerConfig['activate']) {
             if (fwrite($this->fileHandle, $message) === false) {
-                throw new RuntimeException('The file could not be written to. Check that appropriate permissions have been set.');
+                throw new \RuntimeException('The file could not be written to. Check that appropriate permissions have been set.');
             }
         }
     }

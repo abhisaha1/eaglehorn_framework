@@ -1,5 +1,5 @@
 <?php
-namespace eaglehorn\core\controller;
+namespace ajaxtown\eaglehorn_framework\core\controller;
 
 /**
  * EagleHorn
