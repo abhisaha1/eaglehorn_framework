@@ -1,5 +1,5 @@
 <?php
-namespace ajaxtown\eaglehorn_framework\core\worker;;
+namespace eaglehorn\core\worker;;
 // +------------------------------------------------------------------------+
 // | class.upload.php                                                       |
 // +------------------------------------------------------------------------+

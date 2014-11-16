@@ -1,6 +1,6 @@
 <?php
-namespace ajaxtown\eaglehorn_framework;
-use ajaxtown\eaglehorn_framework\core\controller as ehController;
+namespace eaglehorn;
+use eaglehorn\core\controller as ehController;
 /**
  * EagleHorn
  *
@@ -33,6 +33,6 @@ class bootstrap
     }
 
 }
-$t = __NAMESPACE__;
+
 $base = new ehController\Base($extended = false);
 new bootstrap($base);

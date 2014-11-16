@@ -1,5 +1,5 @@
 <?php
-namespace ajaxtown\eaglehorn_framework\core\controller;
+namespace eaglehorn\core\controller;
 
 
 /**
@@ -84,7 +84,7 @@ class Loader
 
             }
 
-            $helper = $this->$class = $this->_createInstance('ajaxtown\eaglehorn_framework\core\worker\\', $class, $params, $method_name, $data);
+            $helper = $this->$class = $this->_createInstance('eaglehorn\core\worker\\', $class, $params, $method_name, $data);
         }
 
         return $helper;
@@ -212,7 +212,7 @@ class Loader
 
             }
 
-            $assembly = $this->$class = $this->_createInstance('ajaxtown\eaglehorn_framework\core\assembly\\' . $class . '\\', $class, $params, $method_name, $data);
+            $assembly = $this->$class = $this->_createInstance('eaglehorn\core\assembly\\' . $class . '\\', $class, $params, $method_name, $data);
         }
 
         return $assembly;
