@@ -62,10 +62,9 @@ class Logger extends AbstractLogger
     /**
      * Class constructor
      *
-     * @param string $logDirectory File path to the logging directory
+     * @param string     $logDirectory File path to the logging directory
      * @param int|string $logLevelThreshold The LogLevel Threshold
-     * @throws RuntimeException
-     * @return \eaglehorn\core\controller\Logger
+     * @return \eaglehorn\Logger
      */
     public function __construct($logDirectory, $logLevelThreshold = LogLevel::DEBUG)
     {
@@ -76,12 +75,12 @@ class Logger extends AbstractLogger
         }
         $this->logFilePath = $logDirectory.DIRECTORY_SEPARATOR.'log_'.date('Y-m-d').'.txt';
         if (file_exists($this->logFilePath) && !is_writable($this->logFilePath)) {
-            throw new \RuntimeException('The file could not be written to. Check that appropriate permissions have been set.');
+            exit('The log file could not be written to <code><i>'.$logDirectory.'</i></code>. Check that appropriate permissions have been set.');
         }
 
         $this->fileHandle = fopen($this->logFilePath, 'a');
         if ( ! $this->fileHandle) {
-            throw new \RuntimeException('The file could not be opened. Check permissions.');
+            exit('The log folder <code><i>'.$logDirectory.'</i></code> could not be opened. Check permissions.');
         }
     }
     /**
