@@ -1,6 +1,5 @@
 <?php
 namespace eaglehorn;
-use eaglehorn\core\controller as ehController;
 /**
  * EagleHorn
  *
@@ -28,11 +27,11 @@ class bootstrap
      */
     function __construct($base)
     {
-        $this->route_callback = ehController\Router::execute();
+        $this->route_callback = Router::execute();
         $base->load->controller($this->route_callback[0], array(), $this->route_callback[1], $this->route_callback[2]);
     }
 
 }
 
-$base = new ehController\Base($extended = false);
+$base = new Base($extended = false);
 new bootstrap($base);

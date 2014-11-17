@@ -1,5 +1,5 @@
 <?php
-namespace eaglehorn\core\controller;
+namespace eaglehorn;
 
 
 /**
@@ -84,7 +84,7 @@ class Loader
 
             }
 
-            $helper = $this->$class = $this->_createInstance('eaglehorn\core\worker\\', $class, $params, $method_name, $data);
+            $helper = $this->$class = $this->_createInstance('eaglehorn\worker\\', $class, $params, $method_name, $data);
         }
 
         return $helper;

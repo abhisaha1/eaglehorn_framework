@@ -92,22 +92,22 @@ if (!function_exists('configItem')) {
 function getController()
 {
 
-    return eaglehorn\core\controller\Router::$callback[0];
+    return eaglehorn\Router::$callback[0];
 }
 
 function getMethod()
 {
 
-    return eaglehorn\core\controller\Router::$callback[1];
+    return eaglehorn\Router::$callback[1];
 }
 
 function getParameters($index = false)
 {
 
     if ($index !== false) {
-        return isset(eaglehorn\core\controller\Router::$callback[2][$index]) ? eaglehorn\core\controller\Router::$callback[2][$index] : null;
+        return isset(eaglehorn\Router::$callback[2][$index]) ? eaglehorn\Router::$callback[2][$index] : null;
     }
-    return eaglehorn\core\controller\Router::$callback[2];
+    return eaglehorn\Router::$callback[2];
 }
 
 

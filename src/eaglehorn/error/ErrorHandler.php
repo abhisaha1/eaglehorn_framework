@@ -1,5 +1,5 @@
 <?php
-namespace eaglehorn\core\common;
+namespace eaglehorn\error;
 /**
  * EagleHorn
  *
@@ -187,9 +187,9 @@ if ($error == 0) {
     error_reporting(0);
 
 } else if ($error == 2) {
-    set_error_handler(array('eaglehorn\core\common\ErrorHandler', 'captureNormal'));
-    set_exception_handler(array('eaglehorn\core\common\ErrorHandler', 'captureException'));
-    register_shutdown_function(array('eaglehorn\core\common\ErrorHandler', 'captureShutdown'));
+    set_error_handler(array('ErrorHandler', 'captureNormal'));
+    set_exception_handler(array('ErrorHandler', 'captureException'));
+    register_shutdown_function(array('ErrorHandler', 'captureShutdown'));
 
 } else if ($error == 1) {
     error_reporting(E_ALL);
