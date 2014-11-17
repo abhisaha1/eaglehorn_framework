@@ -1,5 +1,5 @@
 <?php
-namespace eaglehorn;
+namespace eaglehorn\bootstrap;
 /**
  * EagleHorn
  *

@@ -1,4 +1,5 @@
-<?php   namespace eaglehorn\core\assembly\Mail;
+<?php
+namespace eaglehorn\assembly\Mail;
 /**
  * EagleHorn
  *
@@ -17,7 +18,7 @@
  */
 require("class.phpmailer.php");
 
-class Mail extends \PHPMailer
+class Mail extends PHPMailer
 {
     // Set default variables for all new objects
     public $SMTPDebug = SMTP_DEBUG;

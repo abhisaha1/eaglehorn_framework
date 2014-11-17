@@ -1,4 +1,5 @@
 <?php
+namespace eaglehorn\assembly\Mail;
 /*~ class.phpmailer.php
 .---------------------------------------------------------------------------.
 |  Software: PHPMailer - PHP email class                                    |
@@ -2555,7 +2556,7 @@ class PHPMailer
     }
 }
 
-class phpmailerException extends Exception
+class phpmailerException extends \Exception
 {
     public function errorMessage()
     {
