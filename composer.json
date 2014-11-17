@@ -16,8 +16,5 @@
         "php": ">=5.4",
         "psr/log": "dev-master"
     },
-    "psr-0": {
-        "eaglehorn": "src/"
-    },
     "minimum-stability": "stable"
 }
