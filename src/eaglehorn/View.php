@@ -3,7 +3,7 @@ namespace eaglehorn;
 /**
  * EagleHorn
  *
- * An open source application development framework for PHP 5.3 or newer
+ * An open source application development framework for PHP 5.4 or newer
  *
  * @package        EagleHorn
  * @author        Abhishek Saha <abhisheksaha11 AT gmail DOT com>
