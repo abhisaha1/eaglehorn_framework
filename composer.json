@@ -16,5 +16,11 @@
         "php": ">=5.4",
         "psr/log": "dev-master"
     },
+    "autoload": {
+        "files": [
+            "src/eaglehorn/common/functions.php",
+            "src/eaglehorn/error/ErrorHandler.php"
+        ]
+    },
     "minimum-stability": "stable"
 }
