@@ -15,8 +15,7 @@ namespace eaglehorn;
  * @desc Fires up the application.
  */
 
-
-
+require root . 'application/router.php';
 
 class bootstrap
 {
