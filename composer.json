@@ -20,7 +20,10 @@
         "files": [
             "src/eaglehorn/common/functions.php",
             "src/eaglehorn/error/ErrorHandler.php"
-        ]
+        ],
+        "psr-4": {
+            "eaglehorn\\":"src/"
+        }
     },
     "minimum-stability": "stable"
 }
