@@ -35,7 +35,7 @@ if (!function_exists('getConfig')) {
             return $_config[0];
         }
 
-        $file_path = root . 'public/config.php';
+        $file_path = root . 'config/config.php';
 
         // Fetch the config file
         if (!file_exists($file_path)) {
