@@ -1,5 +1,5 @@
 <?php
-namespace eaglehorn;
+namespace Eaglehorn;
 
 
 /**
@@ -10,7 +10,7 @@ namespace eaglehorn;
  * @package        EagleHorn
  * @author        Abhishek Saha <abhisheksaha11 AT gmail DOT com>
  * @license        Available under MIT licence
- * @link        http://eaglehorn.org
+ * @link        http://Eaglehorn.org
  * @since        Version 1.0
  * @filesource
  *
@@ -84,7 +84,7 @@ class Loader
 
             }
 
-            $helper = $this->$class = $this->_createInstance('eaglehorn\worker\\', $class, $params, $method_name, $data);
+            $helper = $this->$class = $this->_createInstance('Eaglehorn\worker\\', $class, $params, $method_name, $data);
         }
 
         return $helper;
@@ -212,7 +212,7 @@ class Loader
 
             }
 
-            $assembly = $this->$class = $this->_createInstance('eaglehorn\core\assembly\\' . $class . '\\', $class, $params, $method_name, $data);
+            $assembly = $this->$class = $this->_createInstance('Eaglehorn\core\assembly\\' . $class . '\\', $class, $params, $method_name, $data);
         }
 
         return $assembly;

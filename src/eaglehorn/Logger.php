@@ -1,5 +1,5 @@
 <?php
-namespace eaglehorn;
+namespace Eaglehorn;
 use Psr\Log\AbstractLogger;
 use Psr\Log\LogLevel;
 
@@ -11,7 +11,7 @@ use Psr\Log\LogLevel;
  * @package        EagleHorn
  * @author        Abhishek Saha <abhisheksaha11 AT gmail DOT com>
  * @license        Available under MIT licence
- * @link        http://eaglehorn.org
+ * @link        http://Eaglehorn.org
  * @since        Version 1.0
  * @filesource
  *
@@ -64,7 +64,7 @@ class Logger extends AbstractLogger
      *
      * @param string     $logDirectory File path to the logging directory
      * @param int|string $logLevelThreshold The LogLevel Threshold
-     * @return \eaglehorn\Logger
+     * @return \Eaglehorn\Logger
      */
     public function __construct($logDirectory, $logLevelThreshold = LogLevel::DEBUG)
     {

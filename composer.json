@@ -18,11 +18,11 @@
     },
     "autoload": {
         "files": [
-            "src/eaglehorn/common/functions.php",
-            "src/eaglehorn/error/ErrorHandler.php"
+            "src/Eaglehorn/common/functions.php",
+            "src/Eaglehorn/error/ErrorHandler.php"
         ],
         "psr-4": {
-            "eaglehorn\\":"src/"
+            "Eaglehorn\\":"src/"
         }
     },
     "minimum-stability": "stable"

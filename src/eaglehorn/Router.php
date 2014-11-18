@@ -1,5 +1,5 @@
 <?php
-namespace eaglehorn;
+namespace Eaglehorn;
 
 /**
  * EagleHorn
@@ -9,7 +9,7 @@ namespace eaglehorn;
  * @package        EagleHorn
  * @author        Abhishek Saha <abhisheksaha11 AT gmail DOT com>
  * @license        Available under MIT licence
- * @link        http://eaglehorn.org
+ * @link        http://Eaglehorn.org
  * @since        Version 1.0
  * @filesource
  *

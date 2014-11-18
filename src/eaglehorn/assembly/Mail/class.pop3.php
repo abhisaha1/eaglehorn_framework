@@ -1,5 +1,5 @@
 <?php
-namespace eaglehorn\assembly\Mail;
+namespace Eaglehorn\assembly\Mail;
 /*~ class.pop3.php
 .---------------------------------------------------------------------------.
 |  Software: PHPMailer - PHP email class                                    |

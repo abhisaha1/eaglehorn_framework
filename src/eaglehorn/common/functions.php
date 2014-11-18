@@ -8,7 +8,7 @@
  * @package        EagleHorn
  * @author        Abhishek Saha <abhisheksaha11 AT gmail DOT com>
  * @license        Available under MIT licence
- * @link        http://eaglehorn.org
+ * @link        http://Eaglehorn.org
  * @since        Version 1.0
  * @filesource
  *
@@ -92,22 +92,22 @@ if (!function_exists('configItem')) {
 function getController()
 {
 
-    return eaglehorn\Router::$callback[0];
+    return Eaglehorn\Router::$callback[0];
 }
 
 function getMethod()
 {
 
-    return eaglehorn\Router::$callback[1];
+    return Eaglehorn\Router::$callback[1];
 }
 
 function getParameters($index = false)
 {
 
     if ($index !== false) {
-        return isset(eaglehorn\Router::$callback[2][$index]) ? eaglehorn\Router::$callback[2][$index] : null;
+        return isset(Eaglehorn\Router::$callback[2][$index]) ? Eaglehorn\Router::$callback[2][$index] : null;
     }
-    return eaglehorn\Router::$callback[2];
+    return Eaglehorn\Router::$callback[2];
 }
 
 
