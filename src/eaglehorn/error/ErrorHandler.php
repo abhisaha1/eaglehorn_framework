@@ -118,7 +118,7 @@ class ErrorHandler
          
          </code>";
 
-        include_once 'error/error_template.php';
+        include_once 'error_template.php';
 
     }
 
@@ -160,7 +160,7 @@ class ErrorHandler
          <br />
          </code>";
 
-        include_once 'error/error_template.php';
+        include_once 'error_template.php';
 
     }
 
@@ -187,9 +187,10 @@ if ($error == 0) {
     error_reporting(0);
 
 } else if ($error == 2) {
-    set_error_handler(array('ErrorHandler', 'captureNormal'));
-    set_exception_handler(array('ErrorHandler', 'captureException'));
-    register_shutdown_function(array('ErrorHandler', 'captureShutdown'));
+    error_reporting(0);
+    set_error_handler('Eaglehorn\error\ErrorHandler::captureNormal');
+    set_exception_handler('Eaglehorn\error\ErrorHandler::captureException');
+    register_shutdown_function('Eaglehorn\error\ErrorHandler::captureShutdown');
 
 } else if ($error == 1) {
     error_reporting(E_ALL);
