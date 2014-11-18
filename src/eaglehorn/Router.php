@@ -118,7 +118,7 @@ class Router
         // Whether or not we have matched the URL to a route
         $matched_route = false;
 
-        $request = DIRECTORY_SEPARATOR . $request;
+        $request = '/' . $request;
 
         //make sure the request has a trailing slash
         $request = rtrim($request, '/') . '/';
