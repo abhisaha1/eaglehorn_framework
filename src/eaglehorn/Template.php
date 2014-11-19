@@ -82,7 +82,12 @@ class Template
             $this->_applyTemplateData();
 
             //display
-            echo $this->template_markup;
+            if (php_sapi_name() != "cli") {
+                echo $this->template_markup;
+            }else{
+                return $this->template_markup;
+            }
+
 
         } else {
             //log error

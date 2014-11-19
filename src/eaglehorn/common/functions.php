@@ -34,8 +34,11 @@ if (!function_exists('getConfig')) {
         if (isset($_config)) {
             return $_config[0];
         }
-
-        $file_path = root . 'config/config.php';
+        if(defined('root')) {
+            $file_path = root . 'config/config.php';
+        }else{
+            $file_path = './config/config.php';
+        }
 
         // Fetch the config file
         if (!file_exists($file_path)) {
