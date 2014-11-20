@@ -35,17 +35,20 @@ if (!function_exists('getConfig')) {
             return $_config[0];
         }
         if(defined('root')) {
-            $file_path = root . 'config/config.php';
+            $app_config_file = root . 'config/config.php';
         }else{
-            $file_path = './config/config.php';
+            $app_config_file = './config/config.php';
         }
 
         // Fetch the config file
-        if (!file_exists($file_path)) {
+        if (!file_exists($app_config_file)) {
             exit('The configuration file does not exist.');
         }
 
-        require($file_path);
+        $core_config_file = $core_config_file = dirname(__DIR__) . '/config/config.php';
+
+        require($app_config_file);
+        require($core_config_file);
 
         // Does the $config array exist in the file?
         if (!isset($config) OR !is_array($config)) {
