@@ -18,41 +18,36 @@ class Base
 
     /**
      * Holds an instance of the loader object which is responsible for loading models, views, controller, workers.
-     *
      * @var object
      */
     public $load = null;
 
     /**
      * Holds the variables which are generated dynamically.
-     *
      * @var array
      */
     public $attr = array();
 
     /**
      * Checks if only one instance of loader class is available. If not it creates one.
-     *
      * @var object
      */
     private static $loaderInstance;
 
     /**
      * Base Instance.
-     *
      * @var object
      */
     private static $baseInstance;
+
     /**
      * Stores template data.
-     *
      * @var array
      */
     public $data_passed = "";
 
     /**
      * Holds the logger instance
-     *
      * @var Logger
      */
     public $logger;
@@ -100,7 +95,6 @@ class Base
      */
     public function __get($key)
     {
-
         if (array_key_exists($key, $this->attr)) {
 
             return $this->attr[$key];
@@ -113,6 +107,10 @@ class Base
         return null;
     }
 
+    /**
+     * @param $key
+     * @param $value
+     */
     public function __set($key, $value)
     {
         $this->attr[$key] = $value;
@@ -141,5 +139,3 @@ class Base
     }
 
 }
-
-?>

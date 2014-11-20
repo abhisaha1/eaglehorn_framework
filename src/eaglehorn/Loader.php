@@ -18,35 +18,30 @@ class Loader
 
     /**
      * Holds information about views to be loaded
-     *
      * @var array
      */
     public $viewset = array();
 
     /**
      * Holds information about models loaded
-     *
      * @var array
      */
     private $_loaded_models = array();
 
     /**
      * Holds information about controllers loaded
-     *
      * @var array
      */
     private $_loaded_controllers = array();
 
     /**
      * Holds information about template to be loaded
-     *
      * @var array
      */
     public $template = array();
 
     /**
      * Holds the logger instance
-     *
      * @var Logger
      */
     private $logger;
@@ -59,7 +54,6 @@ class Loader
     {
         $this->logger = $logger;
     }
-
 
     /**
      * Responsible for loading workers
