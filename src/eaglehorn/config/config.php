@@ -4,7 +4,7 @@
 $config['site']['coredir'] = dirname(__FILE__);
 
 /* Custom Controller directory */
-$config['site']['cust_controller_dir'] = $config['site']['appdir'].'controller/';
+$config['site']['cust_controller_dir'] = $config['site']['appdir'] . 'controller/';
 
 /* System Controller directory */
 $config['site']['core_controller_dir'] = $config['site']['coredir'];

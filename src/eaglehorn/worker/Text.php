@@ -3,19 +3,15 @@ namespace Eaglehorn\worker;
 
 /**
  * EagleHorn
- *
  * An open source application development framework for PHP 5.4 or newer
  *
  * @package        EagleHorn
- * @author        Abhishek Saha <abhisheksaha11 AT gmail DOT com>
+ * @author         Abhishek Saha <abhisheksaha11 AT gmail DOT com>
  * @license        Available under MIT licence
- * @link        http://Eaglehorn.org
- * @since        Version 1.0
+ * @link           http://Eaglehorn.org
+ * @since          Version 1.0
  * @filesource
- *
- *
- * @desc  Responsible for handling text decorations
- *
+ * @desc           Responsible for handling text decorations
  */
 class Text
 {
@@ -62,8 +58,8 @@ class Text
     }
 
     /**
-     * @param $str
-     * @param $phrase
+     * @param        $str
+     * @param        $phrase
      * @param string $tag_open
      * @param string $tag_close
      * @return mixed|string

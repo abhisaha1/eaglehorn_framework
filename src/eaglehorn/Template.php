@@ -3,24 +3,19 @@ namespace Eaglehorn;
 
 /**
  * EagleHorn
- *
  * An open source application development framework for PHP 5.1.6 or newer
  *
  * @package        EagleHorn
- * @author        Abhishek Saha <abhisheksaha11 AT gmail DOT com>
+ * @author         Abhishek Saha <abhisheksaha11 AT gmail DOT com>
  * @license        Available under MIT licence
- * @link        http://Eaglehorn.org
- * @since        Version 1.0
+ * @link           http://Eaglehorn.org
+ * @since          Version 1.0
  * @filesource
- *
- *
- * @desc  Responsible for rendering and parsing Templates
- *
+ * @desc           Responsible for rendering and parsing Templates
  */
 
 class Template
 {
-
     private $template_markup;
     private $injections = array();
     private $base;
@@ -31,11 +26,11 @@ class Template
         foreach ($base->attr as $key => $value) {
             $this->$key = $value;
         }
-
     }
 
     /**
      * Store the CSS Link
+     *
      * @param $file
      */
     public function injectCSS($file)
@@ -45,6 +40,7 @@ class Template
 
     /**
      * Store the JS File
+     *
      * @param $file
      */
     public function injectJS($file)
@@ -54,6 +50,7 @@ class Template
 
     /**
      * Store meta info
+     *
      * @param $name
      * @param $content
      */
@@ -84,10 +81,9 @@ class Template
             //display
             if (php_sapi_name() != "cli") {
                 echo $this->template_markup;
-            }else{
+            } else {
                 return $this->template_markup;
             }
-
 
         } else {
             //log error
@@ -99,7 +95,6 @@ class Template
      */
     private function _applyInjections()
     {
-
         foreach ($this->injections as $head) {
 
             $tags = $this->_getInjectionString($head);
@@ -107,11 +102,11 @@ class Template
         }
 
         $this->template_markup = str_replace('</head>', $tags, $this->template_markup);
-
     }
 
     /**
      * Combine all CSS, JS, META lines in one string
+     *
      * @param $content
      * @return string
      */
@@ -141,12 +136,11 @@ class Template
 
         //replace vars with values and apply functions
         $this->_replaceVars($matches[1], $template_data);
-
-
     }
 
     /**
      * Replace {VARIABLES} with values and apply filter functions
+     *
      * @param $vars
      * @param $values
      */
@@ -192,8 +186,5 @@ class Template
                 $this->template_markup = str_replace('{' . $templateVars . '}', $values[$templateVars], $this->template_markup);
             }
         }
-
     }
-
-
 }

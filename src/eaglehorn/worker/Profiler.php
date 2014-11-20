@@ -1,27 +1,24 @@
 <?php
 namespace Eaglehorn\worker;
+
 /**
  * EagleHorn
- *
  * An open source application development framework for PHP 5.4 or newer
  *
  * @package        EagleHorn
- * @author        Abhishek Saha <abhisheksaha11 AT gmail DOT com>
+ * @author         Abhishek Saha <abhisheksaha11 AT gmail DOT com>
  * @license        Available under MIT licence
- * @link        http://Eaglehorn.org
- * @since        Version 1.0
+ * @link           http://Eaglehorn.org
+ * @since          Version 1.0
  * @filesource
- *
- *
- * @desc  Responsible for handling paginations
- * Example usage:
- *   $p = new Profile();
- *   $time = $p->profile("classname", "methodname", array(arg1, arg2, ...));
- *   $p->printDetails();
- *
- * You can also provide an optional number to profile, which will result
- * in the method getting called that many times. Details are then recoded
- * about the total execution time, average time, and worst single time.
+ * @desc           Responsible for handling paginations
+ *                 Example usage:
+ *                 $p = new Profile();
+ *                 $time = $p->profile("classname", "methodname", array(arg1, arg2, ...));
+ *                 $p->printDetails();
+ *                 You can also provide an optional number to profile, which will result
+ *                 in the method getting called that many times. Details are then recoded
+ *                 about the total execution time, average time, and worst single time.
  */
 class Profiler
 {
@@ -44,8 +41,8 @@ class Profiler
      *
      * @param string $classname
      * @param string $methodname
-     * @param array $methodargs
-     * @param int $invocations
+     * @param array  $methodargs
+     * @param int    $invocations
      * @throws Exception
      * @internal param string $classname
      * @internal param string $methodname
@@ -90,6 +87,7 @@ class Profiler
     /**
      * Returns a string representing the last invoked
      * method, including any arguments
+     *
      * @return string
      */
     private function invokedMethod()

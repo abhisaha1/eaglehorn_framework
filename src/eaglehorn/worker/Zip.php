@@ -1,20 +1,17 @@
 <?php
 namespace Eaglehorn\worker;
+
 /**
  * EagleHorn
- *
  * An open source application development framework for PHP 5.4 or newer
  *
  * @package        EagleHorn
- * @author        Abhishek Saha <abhisheksaha11 AT gmail DOT com>
+ * @author         Abhishek Saha <abhisheksaha11 AT gmail DOT com>
  * @license        Available under MIT licence
- * @link        http://Eaglehorn.org
- * @since        Version 1.0
+ * @link           http://Eaglehorn.org
+ * @since          Version 1.0
  * @filesource
- *
- *
- * @desc  Responsible for handling zip related operations
- *
+ * @desc           Responsible for handling zip related operations
  */
 class Zip
 {
@@ -67,8 +64,8 @@ class Zip
     }
 
     /**
-     * Extra fields on the Zip directory records are Unix time codes needed for compatibility on the default Mac zip archive tool.
-     * These are enabled as default, as they do no harm elsewhere and only add 26 bytes per file added.
+     * Extra fields on the Zip directory records are Unix time codes needed for compatibility on the default Mac zip
+     * archive tool. These are enabled as default, as they do no harm elsewhere and only add 26 bytes per file added.
      *
      * @param bool $setExtraField TRUE (default) will enable adding of extra fields, anything else will disable it.
      */
@@ -129,8 +126,10 @@ class Zip
      * Basically this is only used if an empty directory is added.
      *
      * @param String $directoryPath Directory Path and name to be added to the archive.
-     * @param int $timestamp (Optional) Timestamp for the added directory, if omitted or set to 0, the current time will be used.
-     * @param String $fileComment (Optional) Comment to be added to the archive for this directory. To use fileComment, timestamp must be given.
+     * @param int    $timestamp     (Optional) Timestamp for the added directory, if omitted or set to 0, the current
+     *                              time will be used.
+     * @param String $fileComment   (Optional) Comment to be added to the archive for this directory. To use
+     *                              fileComment, timestamp must be given.
      * @return bool $success
      */
     public function addDirectory($directoryPath, $timestamp = 0, $fileComment = NULL)
@@ -151,10 +150,12 @@ class Zip
     /**
      * Add a file to the archive at the specified location and file name.
      *
-     * @param String $data File data.
-     * @param String $filePath Filepath and name to be used in the archive.
-     * @param int $timestamp (Optional) Timestamp for the added file, if omitted or set to 0, the current time will be used.
-     * @param String $fileComment (Optional) Comment to be added to the archive for this file. To use fileComment, timestamp must be given.
+     * @param String $data        File data.
+     * @param String $filePath    Filepath and name to be used in the archive.
+     * @param int    $timestamp   (Optional) Timestamp for the added file, if omitted or set to 0, the current time
+     *                            will be used.
+     * @param String $fileComment (Optional) Comment to be added to the archive for this file. To use fileComment,
+     *                            timestamp must be given.
      * @return bool $success
      */
     public function addFile($data, $filePath, $timestamp = 0, $fileComment = NULL)
@@ -201,14 +202,14 @@ class Zip
      *
      * @author Adam Schmalhofer <Adam.Schmalhofer@gmx.de>
      * @author A. Grandt
-     *
-     * @param String $realPath Path on the file system.
-     * @param String $zipPath Filepath and name to be used in the archive.
-     * @param bool $recursive Add content recursively, default is TRUE.
-     * @param bool $followSymlinks Follow and add symbolic links, if they are accessible, default is TRUE.
-     * @param array &$addedFiles Reference to the added files, this is used to prevent duplicates, efault is an empty array.
-     *                               If you start the function by parsing an array, the array will be populated with the realPath
-     *                               and zipPath kay/value pairs added to the archive by the function.
+     * @param String $realPath       Path on the file system.
+     * @param String $zipPath        Filepath and name to be used in the archive.
+     * @param bool   $recursive      Add content recursively, default is TRUE.
+     * @param bool   $followSymlinks Follow and add symbolic links, if they are accessible, default is TRUE.
+     * @param array  &$addedFiles    Reference to the added files, this is used to prevent duplicates, efault is an
+     *                               empty array. If you start the function by parsing an array, the array will be
+     *                               populated with the realPath and zipPath kay/value pairs added to the archive by
+     *                               the function.
      */
     public function addDirectoryContent($realPath, $zipPath, $recursive = TRUE, $followSymlinks = TRUE, &$addedFiles = array())
     {
@@ -246,10 +247,12 @@ class Zip
     /**
      * Add a file to the archive at the specified location and file name.
      *
-     * @param String $dataFile File name/path.
-     * @param String $filePath Filepath and name to be used in the archive.
-     * @param int $timestamp (Optional) Timestamp for the added file, if omitted or set to 0, the current time will be used.
-     * @param String $fileComment (Optional) Comment to be added to the archive for this file. To use fileComment, timestamp must be given.
+     * @param String $dataFile    File name/path.
+     * @param String $filePath    Filepath and name to be used in the archive.
+     * @param int    $timestamp   (Optional) Timestamp for the added file, if omitted or set to 0, the current time
+     *                            will be used.
+     * @param String $fileComment (Optional) Comment to be added to the archive for this file. To use fileComment,
+     *                            timestamp must be given.
      * @return bool $success
      */
     public function addLargeFile($dataFile, $filePath, $timestamp = 0, $fileComment = NULL)
@@ -275,9 +278,11 @@ class Zip
     /**
      * Create a stream to be used for large entries.
      *
-     * @param String $filePath Filepath and name to be used in the archive.
-     * @param int $timestamp (Optional) Timestamp for the added file, if omitted or set to 0, the current time will be used.
-     * @param String $fileComment (Optional) Comment to be added to the archive for this file. To use fileComment, timestamp must be given.
+     * @param String $filePath    Filepath and name to be used in the archive.
+     * @param int    $timestamp   (Optional) Timestamp for the added file, if omitted or set to 0, the current time
+     *                            will be used.
+     * @param String $fileComment (Optional) Comment to be added to the archive for this file. To use fileComment,
+     *                            timestamp must be given.
      * @return bool $success
      */
     public function openStream($filePath, $timestamp = 0, $fileComment = null)
@@ -486,7 +491,7 @@ class Zip
     /**
      * Send the archive as a zip download
      *
-     * @param String $fileName The name of the Zip archive, ie. "archive.zip".
+     * @param String $fileName    The name of the Zip archive, ie. "archive.zip".
      * @param String $contentType Content mime type. Optional, defaults to "application/zip".
      * @return bool $success
      */
@@ -567,14 +572,14 @@ class Zip
     /**
      * Build the Zip file structures
      *
-     * @param String $filePath
-     * @param String $fileComment
-     * @param String $gpFlags
-     * @param String $gzType
-     * @param int $timestamp
-     * @param string $fileCRC32
-     * @param int $gzLength
-     * @param int $dataLength
+     * @param String  $filePath
+     * @param String  $fileComment
+     * @param String  $gpFlags
+     * @param String  $gzType
+     * @param int     $timestamp
+     * @param string  $fileCRC32
+     * @param int     $gzLength
+     * @param int     $dataLength
      * @param integer $extFileAttr Use self::EXT_FILE_ATTR_FILE for files, self::EXT_FILE_ATTR_DIR for Directories.
      */
     private function buildZipEntry($filePath, $fileComment, $gpFlags, $gzType, $timestamp, $fileCRC32, $gzLength, $dataLength, $extFileAttr)

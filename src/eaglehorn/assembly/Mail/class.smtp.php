@@ -26,14 +26,15 @@ namespace Eaglehorn\assembly\Mail;
 /**
  * PHPMailer - PHP SMTP email transport class
  * NOTE: Designed for use with PHP version 5 and up
- * @package PHPMailer
- * @author Andy Prevost
- * @author Marcus Bointon
+ *
+ * @package   PHPMailer
+ * @author    Andy Prevost
+ * @author    Marcus Bointon
  * @copyright 2004 - 2008 Andy Prevost
- * @author Jim Jagielski
+ * @author    Jim Jagielski
  * @copyright 2010 - 2011 Jim Jagielski
- * @license http://www.gnu.org/copyleft/lesser.html Distributed under the Lesser General Public License (LGPL)
- * @version $Id: class.smtp.php 450 2010-06-23 16:46:33Z coolbru $
+ * @license   http://www.gnu.org/copyleft/lesser.html Distributed under the Lesser General Public License (LGPL)
+ * @version   $Id: class.smtp.php 450 2010-06-23 16:46:33Z coolbru $
  */
 
 /**
@@ -47,30 +48,35 @@ class SMTP
 {
     /**
      *  SMTP server port
+     *
      * @var int
      */
     public $SMTP_PORT = 25;
 
     /**
      *  SMTP reply line ending
+     *
      * @var string
      */
     public $CRLF = "\r\n";
 
     /**
      *  Sets whether debugging is turned on
+     *
      * @var bool
      */
     public $do_debug;       // the level of debug to perform
 
     /**
      *  Sets VERP use on/off (default is off)
+     *
      * @var bool
      */
     public $do_verp = false;
 
     /**
      * Sets the SMTP PHPMailer Version number
+     *
      * @var string
      */
     public $Version = '5.2';
@@ -85,6 +91,7 @@ class SMTP
 
     /**
      * Initialize the class so that the data is in a known state.
+     *
      * @access public
      * @return void
      */
@@ -108,9 +115,9 @@ class SMTP
      * established with the server for that number of seconds.
      * If tval is not specified the default is 30 seconds to
      * try on the connection.
-     *
      * SMTP CODE SUCCESS: 220
      * SMTP CODE FAILURE: 421
+     *
      * @access public
      * @return bool
      */
@@ -164,10 +171,10 @@ class SMTP
 
     /**
      * Initiate a TLS communication with the server.
-     *
      * SMTP CODE 220 Ready to start TLS
      * SMTP CODE 501 Syntax error (no parameters allowed)
      * SMTP CODE 454 TLS not available due to temporary reason
+     *
      * @access public
      * @return bool success
      */
@@ -211,6 +218,7 @@ class SMTP
     /**
      * Performs SMTP authentication.  Must be run after running the
      * Hello() method.  Returns true if successfully authenticated.
+     *
      * @access public
      * @return bool
      */
@@ -272,6 +280,7 @@ class SMTP
 
     /**
      * Returns true if connected to a server otherwise false
+     *
      * @access public
      * @return bool
      */
@@ -296,6 +305,7 @@ class SMTP
      * Closes the socket and cleans up the state of the class.
      * It is not considered good to use this function without
      * first trying to use QUIT.
+     *
      * @access public
      * @return void
      */
@@ -320,9 +330,7 @@ class SMTP
      * that is to be send with the headers. Each header needs to be
      * on a single line followed by a <CRLF> with the message headers
      * and the message body being seperated by and additional <CRLF>.
-     *
      * Implements rfc 821: DATA <CRLF>
-     *
      * SMTP CODE INTERMEDIATE: 354
      *     [data]
      *     <CRLF>.<CRLF>
@@ -330,6 +338,7 @@ class SMTP
      *     SMTP CODE FAILURE: 552,554,451,452
      * SMTP CODE FAILURE: 451,554
      * SMTP CODE ERROR  : 500,501,503,421
+     *
      * @access public
      * @return bool
      */
@@ -462,11 +471,10 @@ class SMTP
      * Sends the HELO command to the smtp server.
      * This makes sure that we and the server are in
      * the same known state.
-     *
      * Implements from rfc 821: HELO <SP> <domain> <CRLF>
-     *
      * SMTP CODE SUCCESS: 250
      * SMTP CODE ERROR  : 500, 501, 504, 421
+     *
      * @access public
      * @return bool
      */
@@ -498,6 +506,7 @@ class SMTP
 
     /**
      * Sends a HELO/EHLO command.
+     *
      * @access private
      * @return bool
      */
@@ -533,12 +542,11 @@ class SMTP
      * $from. Returns true if successful or false otherwise. If True
      * the mail transaction is started and then one or more Recipient
      * commands may be called followed by a Data command.
-     *
      * Implements rfc 821: MAIL <SP> FROM:<reverse-path> <CRLF>
-     *
      * SMTP CODE SUCCESS: 250
      * SMTP CODE SUCCESS: 552,451,452
      * SMTP CODE SUCCESS: 500,501,421
+     *
      * @access public
      * @return bool
      */
@@ -578,11 +586,10 @@ class SMTP
     /**
      * Sends the quit command to the server and then closes the socket
      * if there is no error or the $close_on_error argument is true.
-     *
      * Implements from rfc 821: QUIT <CRLF>
-     *
      * SMTP CODE SUCCESS: 221
      * SMTP CODE ERROR  : 500
+     *
      * @access public
      * @return bool
      */
@@ -631,12 +638,11 @@ class SMTP
     /**
      * Sends the command RCPT to the SMTP server with the TO: argument of $to.
      * Returns true if the recipient was accepted false if it was rejected.
-     *
      * Implements from rfc 821: RCPT <SP> TO:<forward-path> <CRLF>
-     *
      * SMTP CODE SUCCESS: 250,251
      * SMTP CODE FAILURE: 550,551,552,553,450,451,452
      * SMTP CODE ERROR  : 500,501,503,421
+     *
      * @access public
      * @return bool
      */
@@ -676,11 +682,10 @@ class SMTP
      * Sends the RSET command to abort and transaction that is
      * currently in progress. Returns true if successful false
      * otherwise.
-     *
      * Implements rfc 821: RSET <CRLF>
-     *
      * SMTP CODE SUCCESS: 250
      * SMTP CODE ERROR  : 500,501,504,421
+     *
      * @access public
      * @return bool
      */
@@ -724,12 +729,11 @@ class SMTP
      * commands may be called followed by a Data command. This command
      * will send the message to the users terminal if they are logged
      * in and send them an email.
-     *
      * Implements rfc 821: SAML <SP> FROM:<reverse-path> <CRLF>
-     *
      * SMTP CODE SUCCESS: 250
      * SMTP CODE SUCCESS: 552,451,452
      * SMTP CODE SUCCESS: 500,501,502,421
+     *
      * @access public
      * @return bool
      */
@@ -769,12 +773,11 @@ class SMTP
      * This is an optional command for SMTP that this class does not
      * support. This method is here to make the RFC821 Definition
      * complete for this class and __may__ be implimented in the future
-     *
      * Implements from rfc 821: TURN <CRLF>
-     *
      * SMTP CODE SUCCESS: 250
      * SMTP CODE FAILURE: 502
      * SMTP CODE ERROR  : 500, 503
+     *
      * @access public
      * @return bool
      */
@@ -790,6 +793,7 @@ class SMTP
 
     /**
      * Get the current error
+     *
      * @access public
      * @return array
      */
@@ -808,6 +812,7 @@ class SMTP
      * With SMTP we can tell if we have more lines to read if the
      * 4th character is '-' symbol. If it is a space then we don't
      * need to read anything else.
+     *
      * @access private
      * @return string
      */

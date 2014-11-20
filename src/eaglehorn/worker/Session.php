@@ -1,97 +1,94 @@
 <?php
 namespace Eaglehorn\worker;
+
 /**
  * EagleHorn
- *
  * An open source application development framework for PHP 5.4 or newer
  *
  * @package        EagleHorn
- * @author        Abhishek Saha <abhisheksaha11 AT gmail DOT com>
+ * @author         Abhishek Saha <abhisheksaha11 AT gmail DOT com>
  * @license        Available under MIT licence
- * @link        http://Eaglehorn.org
- * @since        Version 1.0
+ * @link           http://Eaglehorn.org
+ * @since          Version 1.0
  * @filesource
- *
- *
- * @desc  Responsible for handling sessions with database support
- *
+ * @desc           Responsible for handling sessions with database support
  */
 class Session
 {
 
     /**
      * @description PDO database handle
-     * @access private
+     * @access      private
      * @var PDO database resource
      * */
     private $_db = NULL;
 
     /**
      * @description Database table name where sessions are stored.
-     * @access private
+     * @access      private
      * @var string
      * */
     private $_table_name = 'sessions';
 
     /**
      * @description Cookie name where the session ID is stored.
-     * @access private
+     * @access      private
      * @var string
      * */
     private $_cookie_name = 'session_cookie';
 
     /**
      * @description Number of seconds before the session expires. Default is 2 hours.
-     * @access private
+     * @access      private
      * @var integer
      * */
     private $_seconds_till_expiration = 7200; // 2 hours
 
     /**
      * @description Number of seconds before the session ID is regenerated. Default is 5 minutes.
-     * @access private
+     * @access      private
      * @var integer
      * */
     private $_renewal_time = 300; // 5 minutes
 
     /**
      * @description Closes the session when the browser is closed.
-     * @access private
+     * @access      private
      * @var boolean
      * */
     private $_expire_on_close = FALSE;
 
     /**
      * @description IP address that will be checked against the database if enabled. Must be a valid IP address.
-     * @access private
+     * @access      private
      * @var string
      * */
     private $_ip_address = FALSE;
 
     /**
      * @description User agent that will be checked against the database if enabled.
-     * @access private
+     * @access      private
      * @var string
      * */
     private $_user_agent = FALSE;
 
     /**
      * @description Will only set the session cookie if a secure HTTPS connection is being used.
-     * @access private
+     * @access      private
      * @var boolean
      * */
     private $_secure_cookie = FALSE;
 
     /**
      * @description A hashed string which is the ID of the session.
-     * @access private
+     * @access      private
      * @var string
      * */
     private $_session_id = '';
 
     /**
      * @description Data stored by the user.
-     * @access private
+     * @access      private
      * @var array
      * */
     private $_data = array();
@@ -100,16 +97,16 @@ class Session
 
     /**
      * @description Initializes the session handler.
-     * @access public
+     * @access      public
      * @throws Exception
-     * @internal param $array - configuration options
+     * @internal    param $array - configuration options
      */
-    public function __construct($config = array(),$db = array())
+    public function __construct($config = array(), $db = array())
     {
         // Sets user configuration
 
-        $this->config['session']    = (count($config) > 0) ? $config : configItem('session');
-        $this->config['db']         = (count($db) > 0) ? $db : configItem('mysql');
+        $this->config['session'] = (count($config) > 0) ? $config : configItem('session');
+        $this->config['db'] = (count($db) > 0) ? $db : configItem('mysql');
 
         $this->_setConfig();
 
@@ -127,7 +124,7 @@ class Session
 
     /**
      * @description Regenerates a new session ID for the current session.
-     * @access public
+     * @access      public
      * @return void
      * */
     public function regenerateId()
@@ -146,7 +143,7 @@ class Session
 
     /**
      * @description Sets a specific item to the session data array.
-     * @access public
+     * @access      public
      * @param string - session data array key
      * @param string - data value
      * @return void
@@ -159,7 +156,7 @@ class Session
 
     /**
      * @description Unsets a specific item from the session data array.
-     * @access public
+     * @access      public
      * @param string - session data array key
      * @return void
      * */
@@ -171,7 +168,7 @@ class Session
 
     /**
      * @description Returns a specific item from the session data array.
-     * @access public
+     * @access      public
      * @param string - session data array key
      * @return string - data value/FALSE
      * */
@@ -182,7 +179,7 @@ class Session
 
     /**
      * @description Returns all items in the session data array.
-     * @access public
+     * @access      public
      * @return array
      * */
     public function GetAll()
@@ -192,7 +189,7 @@ class Session
 
     /**
      * @description Destroys the current session.
-     * @access public
+     * @access      public
      * @return void
      * */
     public function destroy()
@@ -215,7 +212,7 @@ class Session
      *      - Checks session expiration
      *      - Verifies IP address (if enabled)
      *      - Verifies user agent (if enabled)
-     * @access private
+     * @access      private
      * @return void
      * */
     private function _read()
@@ -286,7 +283,7 @@ class Session
 
     /**
      * @description Creates a session.
-     * @access private
+     * @access      private
      * @return void
      * */
     private function _create()
@@ -301,7 +298,7 @@ class Session
 
     /**
      * @description Updates a current session.
-     * @access private
+     * @access      private
      * @return void
      * */
     private function _update()
@@ -313,7 +310,7 @@ class Session
 
     /**
      * @description Writes session data to the database.
-     * @access private
+     * @access      private
      * @return void
      * */
     private function _write()
@@ -332,7 +329,7 @@ class Session
 
     /**
      * @description Sets session cookie.
-     * @access private
+     * @access      private
      * @return void
      * */
     private function _setCookie()
@@ -346,7 +343,7 @@ class Session
 
     /**
      * @description Removes expired sessions from the database.
-     * @access private
+     * @access      private
      * @return void
      * */
     private function _cleanExpired()
@@ -360,7 +357,7 @@ class Session
 
     /**
      * @description Creates a unique session ID.
-     * @access private
+     * @access      private
      * @return string
      * */
     private function _generateId()
@@ -378,7 +375,7 @@ class Session
 
     /**
      * @description Checks if the session ID needs to be regenerated and does so if necessary.
-     * @access private
+     * @access      private
      * @return void
      * */
     private function _checkIdRenewal()
@@ -400,7 +397,7 @@ class Session
 
     /**
      * @description Flags a session so that it will receive a new ID on the next subsequent request.
-     * @access private
+     * @access      private
      * @return void
      * */
     private function _flagForUpdate()
@@ -411,7 +408,7 @@ class Session
 
     /**
      * @description Checks if the session has been requested to regenerate a new ID and does so if necessary.
-     * @access private
+     * @access      private
      * @return void
      * */
     private function _checkUpdateFlag()
@@ -437,9 +434,9 @@ class Session
 
     /**
      * @description Sets configuration.
-     * @access private
+     * @access      private
      * @throws \Exception
-     * @internal param array $config - configuration options
+     * @internal    param array $config - configuration options
      * @return void
      */
     private function _setConfig()
@@ -447,13 +444,12 @@ class Session
         try {
             $pdo = new \PDO('mysql:host=' . $this->config['db']['host'] . ';dbname=' . $this->config['db']['db'], $this->config['db']['user'], $this->config['db']['password'], array(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_WARNING));
 
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
 
             throw new \Exception($e->getMessage());
         }
 
         $this->_db = $pdo;
-
 
 
         // --------------------------------------------

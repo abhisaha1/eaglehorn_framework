@@ -1,20 +1,17 @@
 <?php
 namespace Eaglehorn\worker;
+
 /**
  * EagleHorn
- *
  * An open source application development framework for PHP 5.4 or newer
  *
  * @package        EagleHorn
- * @author        Abhishek Saha <abhisheksaha11 AT gmail DOT com>
+ * @author         Abhishek Saha <abhisheksaha11 AT gmail DOT com>
  * @license        Available under MIT licence
- * @link        http://Eaglehorn.org
- * @since        Version 1.0
+ * @link           http://Eaglehorn.org
+ * @since          Version 1.0
  * @filesource
- *
- *
- * @desc  Responsible for handling x time ago and time difference
- *
+ * @desc           Responsible for handling x time ago and time difference
  */
 class Time
 {
@@ -22,9 +19,9 @@ class Time
 
     /**
      * Returns time difference in past tense.
-     *
      * Usage:
      * echo $this->time->time_ago('2013-01-15 06:36:42');
+     *
      * @param string | date $date
      * @return string
      */
@@ -82,6 +79,7 @@ class Time
     /**
      * Time Difference
      * Usage: $this->time->date_diff('2012-01-19 08:30:41','2012-01-19 06:36:42')
+     *
      * @param type $d1
      * @param type $d2
      * @return string

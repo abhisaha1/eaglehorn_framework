@@ -1,15 +1,15 @@
 <?php
 namespace Eaglehorn\error;
+
 /**
  * EagleHorn
- *
  * An open source application development framework for PHP 5.1.6 or newer
  *
  * @package        EagleHorn
- * @author        Abhishek Saha <abhisheksaha11 AT gmail DOT com>
+ * @author         Abhishek Saha <abhisheksaha11 AT gmail DOT com>
  * @license        Available under MIT licence
- * @link        http://Eaglehorn.org
- * @since        Version 1.0
+ * @link           http://Eaglehorn.org
+ * @since          Version 1.0
  * @filesource
  */
 class ErrorHandler

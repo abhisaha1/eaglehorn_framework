@@ -5,23 +5,18 @@ use PDOException;
 
 /**
  * EagleHorn
- *
  * An open source application development framework for PHP 5.4 or newer
  *
  * @package        EagleHorn
- * @author        Abhishek Saha <abhisheksaha11 AT gmail DOT com>
+ * @author         Abhishek Saha <abhisheksaha11 AT gmail DOT com>
  * @license        Available under MIT licence
- * @link        http://Eaglehorn.org
- * @since        Version 1.0
+ * @link           http://Eaglehorn.org
+ * @since          Version 1.0
  * @filesource
- *
- *
- * @desc  Responsible for handling database queries
- *
+ * @desc           Responsible for handling database queries
  */
 class Model extends \PDO
 {
-
     private $_error;
     private $_sql;
     private $_bind;
@@ -63,12 +58,13 @@ class Model extends \PDO
         }
 
         $loggerConfig = configItem('logger');
-        $this->logger = new Logger($loggerConfig['file'],$loggerConfig['level']);
+        $this->logger = new Logger($loggerConfig['file'], $loggerConfig['level']);
     }
 
 
     /**
      * Delete query
+     *
      * @param        $table
      * @param        $where
      * @param string $bind
@@ -82,6 +78,7 @@ class Model extends \PDO
 
     /**
      * Execute the query
+     *
      * @param        $sql
      * @param string $bind
      * @return array|bool|int
@@ -112,7 +109,7 @@ class Model extends \PDO
 
         } catch (PDOException $e) {
             $this->_error = $e->getMessage();
-            if($this->print) {
+            if ($this->print) {
                 $queryPreview = $this->interpolateQuery($this->_sql, $this->_bind);
                 print_r($queryPreview);
             }
@@ -198,8 +195,6 @@ class Model extends \PDO
             }
 
             $this->logger->error($msg);
-            //$func = $this->_errorCallbackFunction;
-            //@$this->$func($msg);
         }
     }
 
@@ -221,7 +216,6 @@ class Model extends \PDO
     }
 
     /**
-     *
      * @param string $table
      * @param array  $info
      * @return array

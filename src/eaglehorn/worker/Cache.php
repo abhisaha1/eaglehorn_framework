@@ -204,8 +204,8 @@ class Cache
      * Store data in the cache
      *
      * @param string $key
-     * @param mixed $data
-     * @param integer [optional] $expiration
+     * @param mixed  $data
+     * @param        integer [optional] $expiration
      * @return object
      */
     public function store($key, $data, $expiration = 0)
@@ -232,7 +232,7 @@ class Cache
      * Retrieve cached data by its key
      *
      * @param string $key
-     * @param boolean [optional] $timestamp
+     * @param        boolean [optional] $timestamp
      * @return string
      */
     public function retrieve($key, $timestamp = false)

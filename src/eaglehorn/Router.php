@@ -3,99 +3,60 @@ namespace Eaglehorn;
 
 /**
  * EagleHorn
- *
- * An open source application development framework for PHP 5.1.6 or newer
+ * An open source application development framework for PHP 5.4 or newer
  *
  * @package        EagleHorn
- * @author        Abhishek Saha <abhisheksaha11 AT gmail DOT com>
+ * @author         Abhishek Saha <abhisheksaha11 AT gmail DOT com>
  * @license        Available under MIT licence
- * @link        http://Eaglehorn.org
- * @since        Version 1.0
+ * @link           http://Eaglehorn.org
+ * @since          Version 1.0
  * @filesource
+ * @desc           Router Class for routing requests
  *
- *
- * @desc  Router Class for routing requests
- *
- * This it the Igniter URL Router, the layer of a web application between the
- * URL and the function executed to perform a request. The router determines
- * which function to execute for a given URL.
- *
- * <code>
- *
- * // Adding a basic route
- * Router::route( '/login', 'login_function' );
- *
- * // Adding a route with a named alphanumeric capture, using the <:var_name> syntax
- * Router::route( '/user/view/<:username>', 'view_username' );
- *
- * // Adding a route with a named numeric capture, using the <#var_name> syntax
- * Router::route( '/user/view/<#user_id>', array( 'UserClass', 'view_user' ) );
- *
- * // Adding a route with a wildcard capture (Including directory separtors), using
- * // the <*var_name> syntax
- * Router::route( '/browse/<*categories>', 'category_browse' );
- *
- * // Adding a wildcard capture (Excludes directory separators), using the
- * // <!var_name> syntax
- * Router::route( '/browse/<!category>', 'browse_category' );
- *
- * // Adding a custom regex capture using the <:var_name|regex> syntax
- * Router::route( '/lookup/zipcode/<:zipcode|[0-9]{5}>', 'zipcode_func' );
- *
- * // Specifying priorities
- * Router::route( '/users/all', 'view_users', 1 ); // Executes first
- * Router::route( '/users/<:status>', 'view_users_by_status', 100 ); // Executes after
- *
- *
- *
- * // Run the router
- * Router::execute();
- * </code>
- *
- * @since 1.0.0
  */
 class Router
 {
 
     /**
      * An array containing the source url as key and destination url as value
+     *
      * @var mixed
      */
     private static $_routes = array();
 
     /**
      * Callback containing the controller/method/attr
+     *
      * @var array
      */
     public static $callback;
 
     /**
      * Contains the attribute passed to the method
+     *
      * @var mixed
      */
     private static $_attr = array();
 
     /**
      * Function used to add routes
+     *
      * @param string $source
      * @param string $destination
-     * @param int $priority
+     * @param int    $priority
      */
     static function route($source, $destination, $priority = 10)
     {
-
-
         self::match($source, $destination, $priority);
-
     }
 
     /**
      * Executes the router
+     *
      * @return mixed
      */
     static function execute()
     {
-
         //first we separate the parameters
         $request = isset($_REQUEST['route']) ? $_REQUEST['route'] : '/';
 
@@ -153,11 +114,11 @@ class Router
 
     /**
      * Sets the callback as an array containing Controller, Method & Parameters
+     *
      * @param string $destination
      */
     private static function _set_callback($destination)
     {
-
         $result = explode('/', trim($destination, '/'));
         //fix the controller now
         $controller = ($result[0] == "") ? configItem('site')['default_controller'] : str_replace('-', '/', $result[0]);

@@ -1,49 +1,54 @@
 <?php
 namespace Eaglehorn;
 
-
 /**
  * EagleHorn
- *
  * An open source application development framework for PHP 5.1.6 or newer
  *
  * @package        EagleHorn
- * @author        Abhishek Saha <abhisheksaha11 AT gmail DOT com>
+ * @author         Abhishek Saha <abhisheksaha11 AT gmail DOT com>
  * @license        Available under MIT licence
- * @link        http://Eaglehorn.org
- * @since        Version 1.0
+ * @link           http://Eaglehorn.org
+ * @since          Version 1.0
  * @filesource
- *
- * @desc  Responsible for loading Models, Views, Templates, Controllers and Workers
- *
+ * @desc           Responsible for loading Models, Views, Templates, Controllers and Workers
  */
 class Loader
 {
 
     /**
      * Holds information about views to be loaded
+     *
      * @var array
      */
     public $viewset = array();
 
     /**
      * Holds information about models loaded
+     *
      * @var array
      */
     private $_loaded_models = array();
 
     /**
      * Holds information about controllers loaded
+     *
      * @var array
      */
     private $_loaded_controllers = array();
 
     /**
      * Holds information about template to be loaded
+     *
      * @var array
      */
     public $template = array();
 
+    /**
+     * Holds the logger instance
+     *
+     * @var Logger
+     */
     private $logger;
 
     /**
@@ -58,15 +63,15 @@ class Loader
 
     /**
      * Responsible for loading workers
-     * @param $worker
-     * @param array $params
+     *
+     * @param        $worker
+     * @param array  $params
      * @param string $method_name
-     * @param array $data
+     * @param array  $data
      * @return object|string
      */
     public function worker($worker, $params = array(), $method_name = "", $data = array())
     {
-
         //Check if this worker has been included
         if (!is_array($worker)) {
             $worker = array($worker);
@@ -93,13 +98,13 @@ class Loader
 
     /**
      * Adds the view in viewset. This viewset is later used for rendering
+     *
      * @param        $viewname
      * @param string $data
      * @return View
      */
     public function view($viewname, $data = '')
     {
-
         if (in_array($viewname, $this->viewset) === false) {
             $this->viewset[] = array($viewname, $data);
             return new View(Base::getInstance());
@@ -109,6 +114,7 @@ class Loader
 
     /**
      * Stores template information. This is later used while rendering templates
+     *
      * @param string $template
      * @param array  $data
      * @param string $options
@@ -116,7 +122,6 @@ class Loader
      */
     public function template($template, $data = array(), $options = '')
     {
-
         $this->template = array($template, $data, $options);
         return new Template(Base::getInstance());
     }
@@ -127,15 +132,14 @@ class Loader
      *  - method
      *  - method parameters
      *
-     * @param string $controller Controller path
-     * @param mixed $params Parameters to constructor
+     * @param string $controller  Controller path
+     * @param mixed  $params      Parameters to constructor
      * @param string $method_name Method to be called
-     * @param mixed $data Parameters to the method
+     * @param mixed  $data        Parameters to the method
      * @return instance
      */
     public function controller($controller, $params = array(), $method_name = "", $data = array())
     {
-
         $file = configItem('site')['cust_controller_dir'] . $controller . '.php';
 
         //base filename of the controller
@@ -163,15 +167,14 @@ class Loader
      *  - method
      *  - method parameters
      *
-     * @param string $model Model path
-     * @param mixed $params Parameters to constructor
+     * @param string $model       Model path
+     * @param mixed  $params      Parameters to constructor
      * @param string $method_name Method to be called
-     * @param mixed $data Parameters to the method
+     * @param mixed  $data        Parameters to the method
      * @return instance
      */
     public function model($model, $params = array(), $method_name = "", $data = array())
     {
-
         //Check if this model has been included
 
         if (!isset($this->_loaded_models[$model])) {
@@ -193,9 +196,20 @@ class Loader
         return $this->_createInstance('application\model\\', $class, $params, $method_name, $data);
     }
 
+    /**
+     * Creates an instance of the assembly. Can be initialized along with
+     *  - constructor parameters
+     *  - method
+     *  - method parameters
+     *
+     * @param        $assemble
+     * @param array  $params
+     * @param string $method_name
+     * @param array  $data
+     * @return object|string
+     */
     public function assembly($assemble, $params = array(), $method_name = "", $data = array())
     {
-
         if (!is_array($assemble)) {
             $assemble = array($assemble);
         }
@@ -220,8 +234,6 @@ class Loader
 
     private function _createInstance($namespace, $class, $params, $method_name, $data)
     {
-
-
         $ns_class = $namespace . $class;
 
         //create a reflection class so that we can pass parameters to the constructor
@@ -246,6 +258,5 @@ class Loader
 
         return $instance;
     }
-
 
 }

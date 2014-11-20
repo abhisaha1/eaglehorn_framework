@@ -1,6 +1,7 @@
 <?php
 /**
  * Simple example script using PHPMailer with exceptions enabled
+ *
  * @package phpmailer
  * @version $Id$
  */

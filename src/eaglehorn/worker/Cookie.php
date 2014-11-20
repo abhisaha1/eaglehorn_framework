@@ -1,20 +1,17 @@
 <?php
 namespace Eaglehorn\worker;
+
 /**
  * EagleHorn
- *
  * An open source application development framework for PHP 5.4 or newer
  *
  * @package        EagleHorn
- * @author        Abhishek Saha <abhisheksaha11 AT gmail DOT com>
+ * @author         Abhishek Saha <abhisheksaha11 AT gmail DOT com>
  * @license        Available under MIT licence
- * @link        http://Eaglehorn.org
- * @since        Version 1.0
+ * @link           http://Eaglehorn.org
+ * @since          Version 1.0
  * @filesource
- *
- *
- * @desc  Responsible for handling cookies
- *
+ * @desc           Responsible for handling cookies
  */
 class Cookie
 {
@@ -69,7 +66,7 @@ class Cookie
      *
      * @param string $name
      * @param string $value
-     * @param mixed $expiry
+     * @param mixed  $expiry
      * @param string $path
      * @param string $domain
      * @return bool
@@ -105,7 +102,7 @@ class Cookie
      * @param string $name
      * @param string $path
      * @param string $domain
-     * @param bool $remove_from_global Set to true to remove this cookie from this request.
+     * @param bool   $remove_from_global Set to true to remove this cookie from this request.
      * @return bool
      */
     public function Delete($name, $path = '/', $domain = false, $remove_from_global = true)

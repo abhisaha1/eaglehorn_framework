@@ -2,24 +2,19 @@
 
 /**
  * EagleHorn
- *
  * An open source application development framework for PHP 5.4 or newer
  *
  * @package        EagleHorn
- * @author        Abhishek Saha <abhisheksaha11 AT gmail DOT com>
+ * @author         Abhishek Saha <abhisheksaha11 AT gmail DOT com>
  * @license        Available under MIT licence
- * @link        http://Eaglehorn.org
- * @since        Version 1.0
+ * @link           http://Eaglehorn.org
+ * @since          Version 1.0
  * @filesource
- *
- *
- * @desc  Commonly used functions
- *
+ * @desc           Commonly used functions
  */
 
 /**
  * Loads the main config.php file
- *
  * This function lets us grab the config file even if the Config class
  * hasn't been instantiated yet
  *
@@ -34,9 +29,9 @@ if (!function_exists('getConfig')) {
         if (isset($_config)) {
             return $_config[0];
         }
-        if(defined('root')) {
+        if (defined('root')) {
             $app_config_file = root . 'config/config.php';
-        }else{
+        } else {
             $app_config_file = './config/config.php';
         }
 
@@ -139,6 +134,7 @@ function anchor($href, $linkname, $id = '', $class = '', $title = '')
 
 /**
  * Used to encrypt a string
+ *
  * @param type $string
  * @return type
  */
@@ -162,6 +158,7 @@ function encodeString($string)
 
 /**
  * Used to decrypt a string
+ *
  * @param type $encrypted_string
  * @return type
  */
@@ -184,7 +181,7 @@ function decodeString($encrypted_string)
  * Formats an array with <pre> tags
  *
  * @param array $var
- * @param int $mode - 2 to dump the array
+ * @param int   $mode - 2 to dump the array
  */
 function display($var, $mode = 1)
 {
@@ -202,7 +199,7 @@ function display($var, $mode = 1)
  * Get files from a folder with or without a specific extension
  *
  * @param string $folderPath
- * @param bool $filepath
+ * @param bool   $filepath
  * @param string $ext
  * @return array
  */
@@ -229,6 +226,7 @@ function getFilesFromFolder($folderPath, $filepath = false, $ext = 'php')
 
 /**
  * Function list all the subfolders of a directory
+ *
  * @param string $dir
  * @return array
  */
@@ -314,6 +312,7 @@ function validateEmail($email)
 
 /**
  * Converts arrays into objects
+ *
  * @param array $array
  * @return object
  */
@@ -326,6 +325,7 @@ function arrayToObject($array)
 
 /**
  * Redirects to a different link
+ *
  * @param string $path controller/method
  */
 function redirect($path, $addhost = true)
@@ -337,6 +337,7 @@ function redirect($path, $addhost = true)
 
 /**
  * Creates a random string of specified length
+ *
  * @param int $length
  * @return string
  */
