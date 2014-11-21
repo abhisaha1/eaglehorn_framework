@@ -261,15 +261,18 @@ class Model extends \PDO
      * @param string       $table
      * @param string       $where
      * @param array|string $bind
-     * @param string       $fields
-     * @param string       $groupby
-     * @param string       $having
-     * @param string       $orderby
-     * @param string       $limit
+     * @param              $options
+     * @internal param string $fields
+     * @internal param string $groupby
+     * @internal param string $having
+     * @internal param string $orderby
+     * @internal param string $limit
      * @return array
      */
-    public function select($table, $where = "", $bind = "", $fields = "*", $groupby = "", $having = "", $orderby = "", $limit = "")
+    public function select($table, $where = "", $bind = "", $options)
     {
+
+        extract($options); //fields, groupby, having, orderby,limit
 
         $sql = "SELECT " . $fields . " FROM " . $table;
 
