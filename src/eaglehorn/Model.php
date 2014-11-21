@@ -198,8 +198,6 @@ class Model extends \PDO
             }
 
             $this->logger->error($msg);
-            //$func = $this->_errorCallbackFunction;
-            //@$this->$func($msg);
         }
     }
 
