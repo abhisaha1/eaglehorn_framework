@@ -5,18 +5,23 @@ use PDOException;
 
 /**
  * EagleHorn
+ *
  * An open source application development framework for PHP 5.4 or newer
  *
  * @package        EagleHorn
- * @author         Abhishek Saha <abhisheksaha11 AT gmail DOT com>
+ * @author        Abhishek Saha <abhisheksaha11 AT gmail DOT com>
  * @license        Available under MIT licence
- * @link           http://Eaglehorn.org
- * @since          Version 1.0
+ * @link        http://Eaglehorn.org
+ * @since        Version 1.0
  * @filesource
- * @desc           Responsible for handling database queries
+ *
+ *
+ * @desc  Responsible for handling database queries
+ *
  */
 class Model extends \PDO
 {
+
     private $_error;
     private $_sql;
     private $_bind;
@@ -58,13 +63,12 @@ class Model extends \PDO
         }
 
         $loggerConfig = configItem('logger');
-        $this->logger = new Logger($loggerConfig['file'], $loggerConfig['level']);
+        $this->logger = new Logger($loggerConfig['file'],$loggerConfig['level']);
     }
 
 
     /**
      * Delete query
-     *
      * @param        $table
      * @param        $where
      * @param string $bind
@@ -78,7 +82,6 @@ class Model extends \PDO
 
     /**
      * Execute the query
-     *
      * @param        $sql
      * @param string $bind
      * @return array|bool|int
@@ -109,7 +112,7 @@ class Model extends \PDO
 
         } catch (PDOException $e) {
             $this->_error = $e->getMessage();
-            if ($this->print) {
+            if($this->print) {
                 $queryPreview = $this->interpolateQuery($this->_sql, $this->_bind);
                 print_r($queryPreview);
             }
@@ -195,6 +198,8 @@ class Model extends \PDO
             }
 
             $this->logger->error($msg);
+            //$func = $this->_errorCallbackFunction;
+            //@$this->$func($msg);
         }
     }
 
@@ -216,6 +221,7 @@ class Model extends \PDO
     }
 
     /**
+     *
      * @param string $table
      * @param array  $info
      * @return array
@@ -259,33 +265,53 @@ class Model extends \PDO
      * Select statement
      *
      * @param string       $table
-     * @param string       $where
+     * @param array        $components
      * @param array|string $bind
-     * @param              $options
-     * @internal param string $fields
-     * @internal param string $groupby
-     * @internal param string $having
-     * @internal param string $orderby
-     * @internal param string $limit
+     *
      * @return array
      */
-    public function select($table, $where = "", $bind = "", $options)
+    public function select($table, $components = array(), $bind = "")
     {
+        $default_components = array(
+            'fields'    => '*',
+            'groupby'   => '',
+            'having'    => '',
+            'orderby'   => '',
+            'limit'     => ''
+        );
 
-        extract($options); //fields, groupby, having, orderby,limit
+        $components = array_merge($default_components,$components);
+        $components = array_filter($components, function($item) { return !empty($item[0]); });
+        $sql = "";
+        foreach($components as $key => $value) {
 
-        $sql = "SELECT " . $fields . " FROM " . $table;
+            switch($key) {
+                case 'fields':
+                    $sql .= "SELECT " . $value . " FROM " . $table;
+                    break;
 
-        if (!empty($where)) $sql .= " WHERE " . $where;
+                case 'where':
+                    $sql .= " WHERE " . $value;
+                    break;
 
-        if (!empty($groupby)) $sql .= " Group by " . $groupby;
+                case 'groupby':
+                    $sql .= " GROUP BY " . $value;
+                    break;
 
-        if (!empty($having)) $sql .= " Having " . $having;
+                case 'having':
+                    $sql .= " HAVING " . $value;
+                    break;
 
-        if (!empty($orderby)) $sql .= " Order By " . $orderby;
+                case 'orderby':
+                    $sql .= " ORDER BY " . $value;
+                    break;
 
-        if (!empty($limit)) $sql .= " Limit " . $limit;
+                case 'limit':
+                    $sql .= " LIMIT " . $value;
+                    break;
+            }
 
+        }
         $sql .= ";";
 
         return $this->run($sql, $bind);
@@ -315,27 +341,24 @@ class Model extends \PDO
      * Updates a table
      *
      * @param string       $table
-     * @param type         $info
+     * @param              $set
      * @param string       $where
-     * @param array|string $bind
+     * @param array        $bind
+     * @internal param type $info
      * @return int
      */
-    public function update($table, $info, $where, $bind = "")
+    public function update($table, $set, $where, $bind = array())
     {
-        $fields = $this->filter($table, $info);
-        $fieldSize = sizeof($fields);
-
         $sql = "UPDATE " . $table . " SET ";
-        for ($f = 0; $f < $fieldSize; ++$f) {
-            if ($f > 0)
-                $sql .= ", ";
-            $sql .= $fields[$f] . " = :update_" . $fields[$f];
+
+        foreach($set as $field => $value) {
+            $sql .= $field ." = ". $value . ",";
         }
+        $sql = rtrim($sql,",");
+
         $sql .= " WHERE " . $where . ";";
 
         $bind = $this->cleanup($bind);
-        foreach ($fields as $field)
-            $bind[":update_$field"] = $info[$field];
 
         return $this->run($sql, $bind);
     }
