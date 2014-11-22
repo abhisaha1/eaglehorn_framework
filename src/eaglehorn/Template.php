@@ -73,7 +73,9 @@ class Template
             $this->template_markup = $this->base->getFileOutput($template_file);
 
             //apply injections
-            $this->_applyInjections();
+            if(sizeof($this->injections) > 0) {
+                $this->_applyInjections();
+            }
 
             //apply template data
             $this->_applyTemplateData();
