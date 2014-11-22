@@ -13,7 +13,7 @@ $config['site']['core_controller_dir'] = $config['site']['coredir'];
 $config['site']['viewdir'] = $config['site']['appdir'] . 'view/';
 
 /* View URL */
-$config['site']['viewurl'] = $config['site']['url'] . 'application/view/';
+$config['site']['viewurl'] = $config['site']['url'] . '../application/view/';
 
 /* Custom Model directory */
 $config['site']['modeldir'] = $config['site']['appdir'] . 'model/';
