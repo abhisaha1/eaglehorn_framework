@@ -13,7 +13,11 @@ $config['site']['core_controller_dir'] = $config['site']['coredir'];
 $config['site']['viewdir'] = $config['site']['appdir'] . 'view/';
 
 /* View URL */
-$config['site']['viewurl'] = $config['site']['url'] . '../application/view/';
+if(strpos($config['site']['url'],'public') > 0) {
+    $config['site']['viewurl'] = $config['site']['url'] . '../application/view/';
+}else{
+    $config['site']['viewurl'] = $config['site']['url'] . '/application/view/';
+}
 
 /* Custom Model directory */
 $config['site']['modeldir'] = $config['site']['appdir'] . 'model/';
@@ -26,6 +30,3 @@ $config['site']['workerdir'] = $config['site']['coredir'] . 'worker/';
 
 /* Assembly directory */
 $config['site']['assemblydir'] = $config['site']['coredir'] . 'assembly/';
-
-/* Assembly URL */
-$config['site']['assemblyurl'] = $config['site']['coredir'] . 'assembly/';
