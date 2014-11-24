@@ -125,8 +125,8 @@ class Router
         //if no method, set it to index
         $method = isset($result[1]) ? $result[1] : 'index';
         //if controller is valid file
-        if (file_exists($file = configItem('site')['cust_controller_dir'] . $controller . '.php')) {
-            self::$callback = array($controller, $method, self::$_attr);
+        if (self::fileExists($file = configItem('site')['cust_controller_dir'] . $controller . '.php',false)) {
+            self::$callback = array(ucFirst($controller), $method, self::$_attr);
         } else {
             die("<b>Exception: </b>Incorrect routing");
         }
@@ -161,6 +161,25 @@ class Router
         // Add the route to our routing array
         self::$_routes[$priority][$route] = $destination;
 
+    }
+
+    public static function fileExists($fileName, $caseSensitive = true) {
+
+        if(file_exists($fileName)) {
+            return $fileName;
+        }
+        if($caseSensitive) return false;
+
+        // Handle case insensitive requests
+        $directoryName = dirname($fileName);
+        $fileArray = glob($directoryName . '/*', GLOB_NOSORT);
+        $fileNameLowerCase = strtolower($fileName);
+        foreach($fileArray as $file) {
+            if(strtolower($file) == $fileNameLowerCase) {
+                return $file;
+            }
+        }
+        return false;
     }
 
 }
