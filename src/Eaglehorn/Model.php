@@ -59,7 +59,7 @@ class Model extends \PDO
                 $options);
 
         } catch (PDOException $e) {
-            $this->_error = $e->getMessage();
+            exit("Couldn't connect to database server");
         }
 
         $loggerConfig = configItem('logger');
