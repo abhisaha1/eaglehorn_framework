@@ -75,7 +75,7 @@ class Loader
 
             $file = configItem('site')['workerdir'] . implode('/', explode('-', $helper)) . '.php';
 
-            $class = basename($file, '.php');
+            $class = ucfirst(basename($file, '.php'));
 
             if (!file_exists($file)) {
 

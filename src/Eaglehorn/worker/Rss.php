@@ -23,13 +23,18 @@ class Rss
     public $channel_data = array();                    // Store RSS Channel Data in an array
     public $feed_unavailable = NULL;                    // Boolean variable which indicates whether an RSS feed was unavailable
     public $cache_life = 0;                        // Cache lifetime
-    public $cache_dir = 'core/cache/';    // Cache directory
+    public $cache_dir;    // Cache directory
     public $write_cache_flag = FALSE;                    // Flag to write to cache
     public $callback = FALSE;                    // Callback to read custom data
 
 
     function __construct($callback = FALSE)
     {
+        $this->cache_dir = configItem('site')['appdir'] . 'cache/';
+
+        if(!is_dir($this->cache_dir)) {
+            mkdir($this->cache_dir, 0755);
+        }
         if ($callback) {
             $this->callback = $callback;
         }
@@ -69,7 +74,7 @@ class Rss
             $rawFeed = file_get_contents($this->feed_uri);
         }
 
-        $xml = new SimpleXmlElement($rawFeed);
+        $xml = new \SimpleXmlElement($rawFeed);
 
         if ($xml->channel) {
             // Assign the channel data
