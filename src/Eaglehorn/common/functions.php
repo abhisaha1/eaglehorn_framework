@@ -128,7 +128,7 @@ function anchor($href, $linkname, $id = '', $class = '', $title = '')
     if (substr($href, 0, 7) == "http://" || substr($href, 0, 8) == "https://")
         return "<a href='$href' title='$title' id='$id' class='$class'>$linkname</a>";
     else
-        return "<a href='" . SITEURL . "$href' title='$title' id='$id' class='$class'>$linkname</a>";
+        return "<a href='" . configItem('site')['url'] . "$href' title='$title' id='$id' class='$class'>$linkname</a>";
 }
 
 
@@ -297,18 +297,6 @@ function isUrlOnline($url)
         return false;
 }
 
-/**
- * Validates an email address
- *
- * @param string $email
- * @return boolean
- */
-function validateEmail($email)
-{
-
-    return (filter_var($email, FILTER_VALIDATE_EMAIL)) ? true : false;
-
-}
 
 /**
  * Converts arrays into objects
