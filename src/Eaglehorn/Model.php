@@ -69,14 +69,16 @@ class Model extends \PDO
 
     /**
      * Delete query
+     *
      * @param        $table
      * @param        $where
      * @param string $bind
+     * @return array|bool|int
      */
     public function delete($table, $where, $bind = "")
     {
         $sql = "DELETE FROM " . $table . " WHERE " . $where . ";";
-        $this->run($sql, $bind);
+        return $this->run($sql, $bind);
     }
 
 
@@ -98,8 +100,10 @@ class Model extends \PDO
             if ($pdostmt->execute($this->_bind) !== false) {
                 if (preg_match("/^(" . implode("|", array("select", "describe", "pragma")) . ") /i", $this->_sql))
                     $return = $pdostmt->fetchAll(\PDO::FETCH_ASSOC);
-                elseif (preg_match("/^(" . implode("|", array("delete", "insert", "update")) . ") /i", $this->_sql))
+                elseif (preg_match("/^(" . implode("|", array("delete", "update")) . ") /i", $this->_sql))
                     $return = $pdostmt->rowCount();
+                elseif (preg_match("/^(" . implode("|", array("insert")) . ") /i", $this->_sql))
+                    $return = $this->lastInsertId();
             }
 
 
@@ -108,6 +112,7 @@ class Model extends \PDO
                 $queryPreview = $this->interpolateQuery($this->_sql, $this->_bind);
                 print_r($queryPreview);
             }
+
             return $return;
 
         } catch (PDOException $e) {
@@ -256,7 +261,7 @@ class Model extends \PDO
      */
     public function create($sql, $bind)
     {
-        $this->run($sql, $bind);
+        return $this->run($sql, $bind);
     }
 
     /**
