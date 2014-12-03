@@ -96,7 +96,8 @@ class Router
                 if (preg_match($source, $request, $matches)) {
                     // A routing rule was matched
                     $matched_route = TRUE;
-                    self::$_attr = array_intersect_key($matches, array_flip(array_filter(array_keys($matches), 'is_string')));
+                    $attr = implode('/',array_intersect_key($matches, array_flip(array_filter(array_keys($matches), 'is_string'))));
+                    self::$_attr = explode('/', trim($attr, '/'));
                     self::_set_callback($destination);
                 }
             }
