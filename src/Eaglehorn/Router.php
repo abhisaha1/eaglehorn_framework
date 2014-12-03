@@ -96,6 +96,8 @@ class Router
                 if (preg_match($source, $request, $matches)) {
                     // A routing rule was matched
                     $matched_route = TRUE;
+                    unset($matches[0]);
+                    self::$_attr = array_filter(array_keys($matches), "is_int");
                     self::_set_callback($destination);
                 }
             }
