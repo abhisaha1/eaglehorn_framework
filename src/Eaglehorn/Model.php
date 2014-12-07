@@ -279,12 +279,13 @@ class Model extends \PDO
             'fields'    => '*',
             'groupby'   => '',
             'having'    => '',
+            'where'     => '',
             'orderby'   => '',
             'limit'     => ''
         );
 
         $components = array_merge($default_components,$components);
-        $components = array_filter($components, function($item) { return !empty($item[0]); });
+        $components = array_filter($components);
         $sql = "";
         foreach($components as $key => $value) {
 
