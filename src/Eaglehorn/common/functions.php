@@ -319,7 +319,7 @@ function arrayToObject($array)
 function redirect($path, $addhost = true)
 {
 
-    (!$addhost) ? header("Location: " . $path) : header("Location: " . SITEURL . $path);
+    (!$addhost) ? header("Location: " . $path) : header("Location: " . configItem('site')['url'] . $path);
     die();
 }
 
