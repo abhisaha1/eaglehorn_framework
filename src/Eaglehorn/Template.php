@@ -160,7 +160,7 @@ class Template
                 /* The first element in the array is not a function. So remove it. */
                 unset($filters[0]);
 
-                if (is_array($filters)) {
+                if (is_array($filters) && isset($values[$templateVar])) {
 
                     $filteredValue = $values[$templateVar];
 
