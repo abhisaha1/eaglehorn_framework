@@ -175,7 +175,7 @@ class Template
                     $this->template_markup = str_replace('{' . $templateVars . '}', $filteredValue, $this->template_markup);
                 }
 
-            } else {
+            } else if(isset($values[$templateVars])){
                 //check if this value is a valid view file
                 $file = configItem('site')['viewdir'] . $values[$templateVars];
 
