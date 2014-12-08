@@ -247,7 +247,11 @@ class Loader
 
         if (method_exists($instance, $method_name)) {
 
-            call_user_func_array(array($instance, $method_name), $data);
+            if(is_callable(array($instance, $method_name))) {
+                call_user_func_array(array($instance, $method_name), $data);
+            }else{
+                die("You do not have access to this link :-)");
+            }
         }
 
         return $instance;
