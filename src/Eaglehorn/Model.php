@@ -30,6 +30,7 @@ class Model extends \PDO
 
     public $logger;
     public $print = false;
+    private $limit;
 
     /**
      * Initiating the model base class
@@ -99,11 +100,17 @@ class Model extends \PDO
             $pdostmt = $this->prepare($this->_sql);
             if ($pdostmt->execute($this->_bind) !== false) {
                 if (preg_match("/^(" . implode("|", array("select", "describe", "pragma")) . ") /i", $this->_sql))
-                    $return = $pdostmt->fetchAll(\PDO::FETCH_ASSOC);
+                {
+                    $return = ($this->limit == 1)? $pdostmt->fetch(\PDO::FETCH_ASSOC) : $pdostmt->fetchAll(\PDO::FETCH_ASSOC);
+                }
                 elseif (preg_match("/^(" . implode("|", array("delete", "update")) . ") /i", $this->_sql))
+                {
                     $return = $pdostmt->rowCount();
+                }
                 elseif (preg_match("/^(" . implode("|", array("insert")) . ") /i", $this->_sql))
+                {
                     $return = $this->lastInsertId();
+                }
             }
 
 
@@ -312,6 +319,7 @@ class Model extends \PDO
 
                 case 'limit':
                     $sql .= " LIMIT " . $value;
+                    if($value == 1)$this->limit = $value;
                     break;
             }
 
@@ -355,10 +363,17 @@ class Model extends \PDO
     {
         $sql = "UPDATE " . $table . " SET ";
 
-        foreach($set as $field => $value) {
-            $sql .= $field ." = ". $value . ",";
+        if(is_array($set)) {
+            foreach($set as $field => $value) {
+                $sql .= $field ." = ". $value . ",";
+            }
+
+            $sql = rtrim($sql,",");
+
+        }else{
+            $sql .= $set;
         }
-        $sql = rtrim($sql,",");
+
 
         $sql .= " WHERE " . $where . ";";
 
