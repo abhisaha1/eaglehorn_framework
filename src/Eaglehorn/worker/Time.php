@@ -20,12 +20,12 @@ class Time
     /**
      * Returns time difference in past tense.
      * Usage:
-     * echo $this->time->time_ago('2013-01-15 06:36:42');
+     * echo $this->time->timeAgo('2013-01-15 06:36:42');
      *
      * @param string | date $date
      * @return string
      */
-    function time_ago($date)
+    function timeAgo($date)
     {
 
         if (empty($date)) {
@@ -78,13 +78,13 @@ class Time
 
     /**
      * Time Difference
-     * Usage: $this->time->date_diff('2012-01-19 08:30:41','2012-01-19 06:36:42')
+     * Usage: $this->time->dateDiff('2012-01-19 08:30:41','2012-01-19 06:36:42')
      *
      * @param type $d1
      * @param type $d2
      * @return string
      */
-    function date_diff($d1, $d2)
+    function dateDiff($d1, $d2)
     {
         $date1 = strtotime($d1);
         $date2 = strtotime($d2);
