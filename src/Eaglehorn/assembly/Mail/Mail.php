@@ -15,18 +15,30 @@ namespace Eaglehorn\assembly\Mail;
  */
 require("class.phpmailer.php");
 
+
 class Mail extends PHPMailer
 {
+
     // Set default variables for all new objects
-    public $SMTPDebug = SMTP_DEBUG;
-    public $SMTPAuth = SMTP_AUTH;                  // enable SMTP authentication
-    public $SMTPSecure = SMTP_SECURE;                 // sets the prefix to the servier
-    public $Host = MAIL_HOST;      // sets GMAIL as the SMTP server
-    public $Port = MAIL_PORT;                   // set the SMTP port for the GMAIL server
-    public $Username = MAIL_UNAME;  // GMAIL username
-    public $Password = MAIL_PWD;            // GMAIL password
-    public $Mailer = MAILER;
+    public $SMTPDebug;
+    public $SMTPAuth;                   // enable SMTP authentication
+    public $SMTPSecure;                 // sets the prefix to the servier
+    public $Host;                       // sets GMAIL as the SMTP server
+    public $Port;                       // set the SMTP port for the GMAIL server
+    public $Username;                   // GMAIL username
+    public $Password;                   // GMAIL password
+    public $Mailer;
 
+    function __construct() {
+        $config = configItem('mail');
+
+        $this->SMTPDebug = $config['smtp_debug'];
+        $this->SMTPAuth = $config['smtp_auth'];
+        $this->SMTPSecure = $config['ssl'];
+        $this->Host = $config['host'];
+        $this->Port = $config['port'];
+        $this->Username = $config['uname'];
+        $this->Password = $config['pwd'];
+        $this->Mailer = $config['mailer'];
+    }
 }
-
-?>
