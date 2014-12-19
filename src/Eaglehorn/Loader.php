@@ -220,7 +220,7 @@ class Loader
 
             }
 
-            $assembly = $this->$class = $this->_createInstance('Eaglehorn\core\assembly\\' . $class . '\\', $class, $params, $method_name, $data);
+            $assembly = $this->$class = $this->_createInstance('Eaglehorn\assembly\\' . $class . '\\', $class, $params, $method_name, $data);
         }
 
         return $assembly;
