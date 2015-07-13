@@ -1717,13 +1717,13 @@ class PHPMailer
                     return false;
                 }
             }
-            if (version_compare(PHP_VERSION, '5.3.0', '<')) {
+            if (version_compare(PHP_VERSION, '5.2.0', '<')) {
                 $magic_quotes = get_magic_quotes_runtime();
                 set_magic_quotes_runtime(0);
             }
             $file_buffer = file_get_contents($path);
             $file_buffer = $this->EncodeString($file_buffer, $encoding);
-            if (version_compare(PHP_VERSION, '5.3.0', '<')) {
+            if (version_compare(PHP_VERSION, '5.2.0', '<')) {
                 set_magic_quotes_runtime($magic_quotes);
             }
             return $file_buffer;

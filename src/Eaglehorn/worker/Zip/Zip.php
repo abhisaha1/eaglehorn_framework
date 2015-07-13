@@ -220,7 +220,7 @@ class Zip
 
             $addedFiles[realpath($realPath)] = $zipPath;
 
-            $iter = new DirectoryIterator($realPath);
+            $iter = new \DirectoryIterator($realPath);
 
             foreach ($iter as $file) {
                 if ($file->isDot()) {
@@ -370,7 +370,7 @@ class Zip
 
         $tempzip = tempnam(sys_get_temp_dir(), 'ZipStream');
 
-        $zip = new ZipArchive;
+        $zip = new \ZipArchive;
         if ($zip->open($tempzip) === TRUE) {
             $zip->addFile($dataFile, 'file');
             $zip->close();
