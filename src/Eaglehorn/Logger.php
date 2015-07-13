@@ -31,6 +31,7 @@ class Logger extends AbstractLogger
      * @var integer
      */
     private $logLevelThreshold = LogLevel::DEBUG;
+
     private $logLevels = array(
         LogLevel::EMERGENCY => 0,
         LogLevel::ALERT => 1,
@@ -69,19 +70,28 @@ class Logger extends AbstractLogger
      */
     public function __construct($logDirectory, $logLevelThreshold = LogLevel::DEBUG)
     {
-        $this->logLevelThreshold = $logLevelThreshold;
-        $logDirectory = rtrim($logDirectory, '\\/');
-        if (!file_exists($logDirectory)) {
-            mkdir($logDirectory, $this->defaultPermissions, true);
-        }
-        $this->logFilePath = $logDirectory . DIRECTORY_SEPARATOR . 'log_' . date('Y-m-d') . '.txt';
-        if (file_exists($this->logFilePath) && !is_writable($this->logFilePath)) {
-            exit('The log file could not be written to <code><i>' . $logDirectory . '</i></code>. Check that appropriate permissions have been set.');
-        }
 
-        $this->fileHandle = fopen($this->logFilePath, 'a');
-        if (!$this->fileHandle) {
-            exit('The log folder <code><i>' . $logDirectory . '</i></code> could not be opened. Check permissions.');
+        $loggerConfig = configItem('logger');
+
+        if($loggerConfig['activate'])
+        {
+            $this->logLevelThreshold = $logLevelThreshold;
+
+            $logDirectory = rtrim($logDirectory, '\\/');
+
+            if (!file_exists($logDirectory))
+            {
+                mkdir($logDirectory, $this->defaultPermissions, true);
+            }
+
+            if (!is_writable($logDirectory))
+            {
+                exit('The log folder <code><i>' . $logDirectory . '</i></code> is read-only. Give write permissions.');
+            }
+
+            $this->logFilePath = $logDirectory . DIRECTORY_SEPARATOR . 'log_' . date('Y-m-d') . '.txt';
+
+            $this->fileHandle = @fopen($this->logFilePath, 'a');
         }
     }
 

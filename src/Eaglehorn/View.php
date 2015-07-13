@@ -65,4 +65,12 @@ class View
         }
     }
 
+    static function show($view,$parameters = array())
+    {
+        extract($parameters);
+        $viewdir = configItem('site')['viewdir'];
+        include_once $viewdir . $view;
+
+    }
+
 }

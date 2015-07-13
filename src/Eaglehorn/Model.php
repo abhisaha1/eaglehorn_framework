@@ -19,7 +19,37 @@ use PDOException;
  * @desc  Responsible for handling database queries
  *
  */
-class Model extends \PDO
+
+class Model {
+
+    function __construct()
+    {
+        $mysql      = configItem('mysql');
+        $orm        = $mysql['orm'];
+        $host       = $mysql['host'];
+        $user       = $mysql['user'];
+        $password   = $mysql['password'];
+        $db         = $mysql['db'];
+
+        if($orm == 'Redbean')
+        {
+            \R::setup( "mysql:host=$host;dbname=$db",
+                $user, $password );
+
+        }
+        else if ($orm == 'Eaglehorn')
+        {
+            return new EH_Model();
+        }
+        else
+        {
+            $ns_class = $orm.'\\'.$orm;
+            return new $ns_class();
+        }
+    }
+}
+
+class EH_Model extends \PDO
 {
 
     private $_error;

@@ -1,7 +1,7 @@
 <?php
 
 /* System directory */
-$config['site']['coredir'] = dirname(__FILE__);
+$config['site']['coredir'] = dirname(dirname(__FILE__)).'/';
 
 /* Custom Controller directory */
 $config['site']['cust_controller_dir'] = $config['site']['appdir'] . 'controller/';
@@ -14,7 +14,7 @@ $config['site']['viewdir'] = $config['site']['appdir'] . 'view/';
 
 /* View URL */
 if(strpos($config['site']['url'],'public') > 0) {
-    $config['site']['viewurl'] = $config['site']['url'] . '../application/view/';
+    $config['site']['viewurl'] = str_replace('/public','',$config['site']['url']) . '/application/view/';
 }else{
     $config['site']['viewurl'] = $config['site']['url'] . '/application/view/';
 }

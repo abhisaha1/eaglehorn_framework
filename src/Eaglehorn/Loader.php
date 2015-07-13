@@ -46,14 +46,18 @@ class Loader
      */
     private $logger;
 
+    private $app_folder = 'application';
+
+    private $loading;
     /**
      * @param Logger $logger
      * @internal param Logger $logger
      */
-    public function __construct(Logger $logger)
+    public function __construct($logger)
     {
         $this->logger = $logger;
     }
+
 
     /**
      * Responsible for loading workers
@@ -73,7 +77,7 @@ class Loader
         $helper = "";
         foreach ($worker as $helper) {
 
-            $file = configItem('site')['workerdir'] . implode('/', explode('-', $helper)) . '.php';
+            $file = configItem('site')['workerdir'] . $helper .'/'. $helper . '.php';
 
             $class = ucfirst(basename($file, '.php'));
 
@@ -82,8 +86,8 @@ class Loader
                 $this->logger->error("The worker $file was not found");
 
             }
-
-            $helper = $this->$class = $this->_createInstance('Eaglehorn\worker\\', $class, $params, $method_name, $data);
+            $this->loading[] = 'worker';
+            $helper = $this->$class = $this->_createInstance('Eaglehorn\worker\\'.$helper.'\\', $class, $params, $method_name, $data);
         }
 
         return $helper;
@@ -117,7 +121,9 @@ class Loader
     public function template($template, $data = array(), $options = '')
     {
         $this->template = array($template, $data, $options);
-        return new Template(Base::getInstance());
+        $template = new Template(Base::getInstance());
+        $this->loaderHooks($template,'pre_template',$class='',$method_name='',$data=array());
+        return $template;
     }
 
     /**
@@ -136,8 +142,12 @@ class Loader
     {
         $file = configItem('site')['cust_controller_dir'] . $controller . '.php';
 
+
         //base filename of the controller
         $class = basename($file, '.php');
+
+        //Get the namespace
+        $ns = get_ns($file,$this->app_folder);
 
         //Check if this controller has been included
         if (!isset($this->_loaded_controllers[$controller])) {
@@ -151,8 +161,8 @@ class Loader
                 $this->_loaded_controllers[$controller] = $class;
             }
         }
-
-        return $this->_createInstance('application\controller\\', $class, $params, $method_name, $data);
+        $this->loading[] = 'controller';
+        return $this->_createInstance($ns, $class, $params, $method_name, $data);
     }
 
     /**
@@ -186,7 +196,7 @@ class Loader
                 $this->_loaded_models[$model] = $class;
             }
         }
-
+        $this->loading[] = 'model';
         return $this->_createInstance('application\model\\', $class, $params, $method_name, $data);
     }
 
@@ -219,7 +229,7 @@ class Loader
                 $this->logger->error("The assembly $file was not found");
 
             }
-
+            $this->loading[] = 'assembly';
             $assembly = $this->$class = $this->_createInstance('Eaglehorn\assembly\\' . $class . '\\', $class, $params, $method_name, $data);
         }
 
@@ -243,18 +253,47 @@ class Loader
             $instance = new $ns_class();
         }
         $this->logger->info("$namespace object created for $class class");
+
         //call the method along with parameters, if they exist !
-
-        if (method_exists($instance, $method_name)) {
-
-            if(is_callable(array($instance, $method_name))) {
+        if (method_exists($instance, $method_name))
+        {
+            if(is_callable(array($instance, $method_name)))
+            {
+                $last_hook = $this->loading[count($this->loading) - 1];
+                $this->loaderHooks($instance,"pre_$last_hook",$class,$method_name,$data);
                 call_user_func_array(array($instance, $method_name), $data);
-            }else{
+                $this->loaderHooks($instance,"post_$last_hook",$class,$method_name,$data);
+            }
+            else
+            {
                 die("You do not have access to this link :-)");
             }
         }
 
+        $this->clearCurrentLoader();
+
         return $instance;
+    }
+
+    protected function clearCurrentLoader()
+    {
+        array_pop($this->loading);
+    }
+
+    protected function loaderHooks($instance,$hook_name,$class='',$method_name='',$data=array())
+    {
+        $hooks = configItem('hooks');
+
+        if(isset($hooks[$hook_name]) && $hooks[$hook_name]['active'])
+        {
+            $ns         = "\\application\\".$hooks[$hook_name]['namespace'];
+            $hook_class = $hooks[$hook_name]['class'];
+            $class_ns   = "$ns\\$hook_class";
+
+            $hook_instance = new $class_ns();
+            call_user_func_array(array($hook_instance, $hooks[$hook_name]['method']), array($instance,$class,$method_name,$data));
+        }
+
     }
 
 }

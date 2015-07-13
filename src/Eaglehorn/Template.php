@@ -1,5 +1,6 @@
 <?php
 namespace Eaglehorn;
+use Twig_Autoloader;
 
 /**
  * EagleHorn
@@ -14,11 +15,12 @@ namespace Eaglehorn;
  * @desc           Responsible for rendering and parsing Templates
  */
 
-class Template
+class Template extends Twig_Autoloader
 {
     private $template_markup;
     private $injections = array();
     private $base;
+    public $twig;
 
     function __construct(Base $base)
     {
@@ -26,6 +28,30 @@ class Template
         foreach ($base->attr as $key => $value) {
             $this->$key = $value;
         }
+        Twig_Autoloader::register();
+        $templates = configItem('site')['appdir'].'templates';
+        $loader = new \Twig_Loader_Filesystem($templates);
+        $this->twig = new \Twig_Environment($loader);
+        $this->twigFunctions();
+    }
+
+    function twigFunctions()
+    {
+        $function = new \Twig_SimpleFunction('configItem', 'configItem');
+        $this->twig->addFunction($function);
+
+        /**
+         * The below code adds a way to include files inside template.
+         * Yes, this is awesome :)
+         * Usage inside template:
+         *
+         * {{inc("header.php")}}
+         */
+        $function = new \Twig_SimpleFunction('inc', function($file){
+            $file = configItem("site")["viewdir"] . $file;
+            echo call_user_func_array(array($this->base,"getFileOutput"),array($file));
+        });
+        $this->twig->addFunction($function);
     }
 
     /**
@@ -70,22 +96,33 @@ class Template
 
         if (file_exists($template_file)) {
 
-            $this->template_markup = $this->base->getFileOutput($template_file);
+            $template = $this->twig->loadTemplate($template_name . '.tpl');
 
-            //apply injections
-            if(sizeof($this->injections) > 0) {
+            $template_data = array();
+
+            if (isset($this->base->load->template[1]) && is_array($this->base->load->template[1]))
+            {
+                $template_data = $this->base->load->template[1];
+
+                foreach($template_data as $key => $value)
+                {
+                    $file = configItem('site')['viewdir'] . $value;
+
+                    if (file_exists($file) && is_file($file))
+                    {
+                        $template_data[$key] = $this->base->getFileOutput($file);
+                        $this->base->logger->info("View parsed - $file");
+
+                    }
+                }
+            }
+            $this->template_markup = $template->render($template_data);
+
+            if(sizeof($this->injections) > 0)
+            {
                 $this->_applyInjections();
             }
-
-            //apply template data
-            $this->_applyTemplateData();
-
-            //display
-            if (php_sapi_name() != "cli") {
-                echo $this->template_markup;
-            } else {
-                return $this->template_markup;
-            }
+            echo $this->template_markup;
 
         } else {
             //log error
@@ -97,8 +134,8 @@ class Template
      */
     private function _applyInjections()
     {
-        foreach ($this->injections as $head) {
-
+        foreach ($this->injections as $head)
+        {
             $tags = $this->_getInjectionString($head);
 
         }
@@ -120,73 +157,5 @@ class Template
             $tags .= $value;
         }
         return $tags;
-    }
-
-    /**
-     * Apply template data
-     */
-    private function _applyTemplateData()
-    {
-        $template_data = array();
-
-        if (isset($this->base->load->template[1]) && is_array($this->base->load->template[1])) {
-            $template_data = $this->base->load->template[1];
-        }
-
-        //get all variables from template
-        preg_match_all('/{(.*?)}/', $this->template_markup, $matches);
-
-        //replace vars with values and apply functions
-        $this->_replaceVars($matches[1], $template_data);
-    }
-
-    /**
-     * Replace {VARIABLES} with values and apply filter functions
-     *
-     * @param $vars
-     * @param $values
-     */
-    private function _replaceVars($vars, $values)
-    {
-        foreach ($vars as $key => $templateVars) {
-
-            /* check if we need to apply functions to this variable */
-            if (strpos($templateVars, '|') !== false) {
-
-                $filters = explode('|', $templateVars);
-
-                $templateVar = $filters[0];
-
-                /* The first element in the array is not a function. So remove it. */
-                unset($filters[0]);
-
-                if (is_array($filters) && isset($values[$templateVar])) {
-
-                    $filteredValue = $values[$templateVar];
-
-                    foreach ($filters as $filter) {
-
-                        if (function_exists($filter) && is_callable($filter)) {
-                            $filteredValue = $filter($filteredValue);
-                        }
-
-                    }
-
-                    $this->template_markup = str_replace('{' . $templateVars . '}', $filteredValue, $this->template_markup);
-                }
-
-            } else if(isset($values[$templateVars])){
-                //check if this value is a valid view file
-                $file = configItem('site')['viewdir'] . $values[$templateVars];
-
-                if (file_exists($file) && is_file($file)) {
-
-                    $values[$templateVars] = $this->base->getFileOutput($file);
-                    $this->base->logger->info("View parsed - $file");
-
-                }
-                $this->template_markup = str_replace('{' . $templateVars . '}', $values[$templateVars], $this->template_markup);
-            }
-        }
     }
 }

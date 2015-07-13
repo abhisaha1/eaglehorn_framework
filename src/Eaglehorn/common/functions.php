@@ -14,7 +14,7 @@
  */
 
 /**
- * Loads the main config.php file
+ * Loads the main app.config.php file
  * This function lets us grab the config file even if the Config class
  * hasn't been instantiated yet
  *
@@ -29,20 +29,16 @@ if (!function_exists('getConfig')) {
         if (isset($_config)) {
             return $_config[0];
         }
-        if (defined('root')) {
-            $app_config_file = root . 'config/config.php';
-        } else {
-            $app_config_file = './config/config.php';
-        }
 
-        // Fetch the config file
-        if (!file_exists($app_config_file)) {
-            exit('The configuration file does not exist.');
+        foreach (glob(root."/config/*.config.php") as $app_config)
+        {
+            if(file_exists($app_config)) {
+                require $app_config;
+            }
         }
 
         $core_config_file = $core_config_file = dirname(__DIR__) . '/config/config.php';
 
-        require($app_config_file);
         require($core_config_file);
 
         // Does the $config array exist in the file?
@@ -64,6 +60,12 @@ if (!function_exists('getConfig')) {
     }
 }
 
+function get_ns($path,$app_dir) {
+    //base filename of the controller
+    $class = basename($path, '.php');
+    preg_match("/(?<=$app_dir).*?(?=$class)/s", $path, $match);
+    return str_replace("/","\\",$app_dir.$match[0]);
+}
 // ------------------------------------------------------------------------
 
 /**
@@ -246,6 +248,7 @@ function getSubDirectories($dir)
 
     return $subFolders;
 }
+
 
 /**
  * Get browser type

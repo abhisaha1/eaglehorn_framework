@@ -28,7 +28,16 @@ class bootstrap
     function __construct($base)
     {
         $this->route_callback = Router::execute();
-        $base->load->controller($this->route_callback[0], array(), $this->route_callback[1], $this->route_callback[2]);
+
+        if(is_callable($this->route_callback[0]))
+        {
+            call_user_func_array($this->route_callback[0],$this->route_callback[1]);
+        }
+        else
+        {
+            $base->load->controller($this->route_callback[0], array(), $this->route_callback[1], $this->route_callback[2]);
+        }
+
     }
 
 }

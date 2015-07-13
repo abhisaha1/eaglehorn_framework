@@ -35,6 +35,11 @@ class Base
     private static $loaderInstance;
 
     /**
+     * Loads all the custom hooks called be user
+     * @var array
+     */
+    private static $hooks = array();
+    /**
      * Base Instance.
      * @var object
      */
@@ -57,14 +62,40 @@ class Base
      */
     public function __construct($extended = true)
     {
-        $loggerConfig = configItem('logger');
-        $this->logger = new Logger($loggerConfig['file'], $loggerConfig['level']);
+
+        self::$hooks = configItem('hooks');
+
+        $this->_setLogger();
+
         $this->load = $this->getLoaderInstance($this->logger);
 
         if ($extended == true) {
             $this->load->worker(configItem('workers'));
         }
         self::$baseInstance =& $this;
+    }
+
+    private function _setLogger()
+    {
+        $loggerConfig = configItem('logger');
+
+        if($this->hookActive('logger'))
+        {
+            $ns         = "\\application\\".self::$hooks['logger']['namespace'];
+            $class      = self::$hooks['logger']['class'];
+            $class_ns   = "$ns\\$class";
+        }
+        else
+        {
+            $class_ns = __NAMESPACE__."\\Logger";
+        }
+
+        $this->logger = new $class_ns($loggerConfig['file'], $loggerConfig['level']);
+    }
+
+    public function hookActive($hook)
+    {
+        return self::$hooks[$hook]['active'];
     }
 
     /**

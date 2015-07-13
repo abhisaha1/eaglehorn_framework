@@ -47,7 +47,17 @@ class Router
      */
     static function route($source, $destination, $priority = 10)
     {
+//        if(is_callable($destination))
+//        {
+//            $destination();
+//        }
+//        else
+//        {
+//            self::match($source, $destination, $priority);
+//        }
+
         self::match($source, $destination, $priority);
+
     }
 
     /**
@@ -92,6 +102,7 @@ class Router
         foreach (self::$_routes as $priority => $routes) {
             // Loop through each route for this priority level
             foreach ($routes as $source => $destination) {
+
                 // Does the routing rule match the current URL?
                 if (preg_match($source, $request, $matches)) {
                     // A routing rule was matched
@@ -100,12 +111,16 @@ class Router
                     self::$_attr = explode('/', trim($attr, '/'));
                     self::_set_callback($destination);
                 }
+
+
+
             }
         }
 
         //if no match found, check if the url is valid
         if (!$matched_route && $request != '/') {
             self::_set_callback($request);
+
         }
 
         if ($request == '/') {
@@ -121,17 +136,26 @@ class Router
      */
     private static function _set_callback($destination)
     {
-        $result = explode('/', trim($destination, '/'));
-        //fix the controller now
-        $controller = ($result[0] == "") ? configItem('site')['default_controller'] : str_replace('-', '/', $result[0]);
-        //if no method, set it to index
-        $method = isset($result[1]) ? $result[1] : 'index';
-        //if controller is valid file
-        if (self::fileExists($file = ucfirst(configItem('site')['cust_controller_dir']) . $controller . '.php',false)) {
-            self::$callback = array(ucFirst($controller), $method, self::$_attr);
-        } else {
-            die("<b>Exception: </b>Incorrect routing");
+
+        if(is_callable($destination))
+        {
+            self::$callback = array($destination,self::$_attr);
         }
+        else
+        {
+            $result = explode('/', trim($destination, '/'));
+            //fix the controller now
+            $controller = ($result[0] == "") ? configItem('site')['default_controller'] : str_replace('-', '/', $result[0]);
+            //if no method, set it to index
+            $method = isset($result[1]) ? $result[1] : 'index';
+            //if controller is valid file
+            if (self::fileExists($file = ucfirst(configItem('site')['cust_controller_dir']) . $controller . '.php',false)) {
+                self::$callback = array(ucFirst($controller), $method, self::$_attr);
+            } else {
+                die("<b>Exception: </b>Incorrect routing");
+            }
+        }
+
     }
 
     private static function match($source, $destination, $priority)
