@@ -152,13 +152,17 @@ class ErrorHandler
           
          <p>
             <strong>Line:</strong> {$line}
-         </p>
-          
-         <h3>Stack trace:</h3>
-         <pre>{$trace}
-         </pre>
-         <br />
-         </code>";
+         </p>";
+
+        if(configItem('logger')['stack'])
+        {
+            $log_message .= "<h3>Stack trace:</h3>
+                 <pre>{$trace}
+                 </pre>
+                 <br />";
+        }
+
+        $log_message .= "</code>";
 
         include_once 'error_template.php';
 

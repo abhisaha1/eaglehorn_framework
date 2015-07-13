@@ -81,12 +81,16 @@ class Logger extends AbstractLogger
 
             if (!file_exists($logDirectory))
             {
+                if(!is_writable($logDirectory))
+                {
+                    throw new \Exception("Couldn't create the log directory: $logDirectory");
+                }
                 mkdir($logDirectory, $this->defaultPermissions, true);
             }
 
             if (!is_writable($logDirectory))
             {
-                exit('The log folder <code><i>' . $logDirectory . '</i></code> is read-only. Give write permissions.');
+                throw new \Exception('The log folder <code><i>' . $logDirectory . '</i></code> is read-only. Give write permissions.');
             }
 
             $this->logFilePath = $logDirectory . DIRECTORY_SEPARATOR . 'log_' . date('Y-m-d') . '.txt';

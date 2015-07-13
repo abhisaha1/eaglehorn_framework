@@ -1,5 +1,6 @@
 <?php
-namespace Eaglehorn\worker;
+namespace Eaglehorn\worker\Rss;
+use Eaglehorn\Logger;
 
 /**
  * EagleHorn
@@ -15,7 +16,7 @@ namespace Eaglehorn\worker;
  */
 
 
-class Rss
+class Rss extends Logger
 {
 
     public $feed_uri = NULL;                    // Feed URI
@@ -123,16 +124,19 @@ class Rss
 
         // Do we need to write the cache file?
         if ($this->write_cache_flag) {
-            if (!$fp = @fopen($filename, 'wb')) {
-                echo "RSSParser error";
-                //log_message('error', "Unable to write cache file: ".$filename);
-                return null;
+            if(!is_writable($filename)) {
+                $this->error("The cache file $filename is not writable");
+            }
+            else
+            {
+                $fp = @fopen($filename, 'wb');
+                flock($fp, LOCK_EX);
+                fwrite($fp, $rawFeed);
+                flock($fp, LOCK_UN);
+                fclose($fp);
             }
 
-            flock($fp, LOCK_EX);
-            fwrite($fp, $rawFeed);
-            flock($fp, LOCK_UN);
-            fclose($fp);
+
         }
 
         return TRUE;

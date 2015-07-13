@@ -1,5 +1,5 @@
 <?php
-namespace Eaglehorn\worker;
+namespace Eaglehorn\worker\Pagination;
 
 /**
  * EagleHorn

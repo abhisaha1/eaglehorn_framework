@@ -1,5 +1,5 @@
 <?php
-namespace Eaglehorn\assembly\Mail;
+namespace Eaglehorn\worker\Mail;
 
 /**
  * EagleHorn

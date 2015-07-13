@@ -77,6 +77,7 @@ class Loader
         $helper = "";
         foreach ($worker as $helper) {
 
+            $helper = ucfirst($helper);
             $file = configItem('site')['workerdir'] . $helper .'/'. $helper . '.php';
 
             $class = ucfirst(basename($file, '.php'));

@@ -1,5 +1,5 @@
 <?php
-
+namespace Eaglehorn\worker\Cache;
 /**
  *More Info - https://github.com/cosenary/Simple-PHP-Cache
  */
@@ -18,7 +18,7 @@ class Cache
      *
      * @var string
      */
-    private $_cachepath = CACHEDIR;
+    private $_cachepath;
     /**
      * The name of the default cache file
      *
@@ -41,7 +41,7 @@ class Cache
      */
     public function __construct($config = null)
     {
-
+        $this->_cachepath = configItem('cache')['dir'];
         if (true === isset($config)) {
             if (is_string($config)) {
                 $this->setCache($config);
@@ -120,18 +120,15 @@ class Cache
 
     /**
      * Check if a writable cache directory exists and if not create a new one
-     *
-     * @throws Exception
-     * @return boolean
+     * @return bool
+     * @throws \Exception
      */
     private function _checkCacheDir()
     {
         if (!is_dir($this->getCachePath()) && !mkdir($this->getCachePath(), 0775, true)) {
-            throw new Exception('Unable to create cache directory ' . $this->getCachePath());
-        } elseif (!is_readable($this->getCachePath()) || !is_writable($this->getCachePath())) {
-            if (!chmod($this->getCachePath(), 0775)) {
-                throw new Exception($this->getCachePath() . ' must be readable and writeable');
-            }
+            throw new \Exception('Unable to create cache directory ' . $this->getCachePath());
+        } elseif (!is_writable($this->getCachePath())) {
+            throw new \Exception($this->getCachePath() . ' must be readable and writeable');
         }
         return true;
     }
