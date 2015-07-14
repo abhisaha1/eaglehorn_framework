@@ -169,4 +169,19 @@ class Base
         return $content;
     }
 
+    function setEnvironment()
+    {
+        $host = $_SERVER['HTTP_HOST'];
+
+        $environments = configItem('environment');
+
+        foreach($environments as $url)
+        {
+            if(strpos($url,$host) > 0)
+            {
+                setConfigItem('site',array('url' => $url));
+            }
+        }
+    }
+
 }

@@ -14,7 +14,7 @@
  */
 
 /**
- * Loads the main app.config.php file
+ * Loads all *.config.php files
  * This function lets us grab the config file even if the Config class
  * hasn't been instantiated yet
  *
@@ -27,6 +27,14 @@ if (!function_exists('getConfig')) {
         static $_config;
 
         if (isset($_config)) {
+            // Are any values being dynamically replaced?
+            if (count($replace) > 0) {
+                foreach ($replace as $key => $val) {
+                    if (isset($_config[0][$key])) {
+                        $_config[0][$key] = array_merge($_config[0][$key],$val);
+                    }
+                }
+            }
             return $_config[0];
         }
 
@@ -47,13 +55,14 @@ if (!function_exists('getConfig')) {
         }
 
         // Are any values being dynamically replaced?
+        /**----
         if (count($replace) > 0) {
             foreach ($replace as $key => $val) {
                 if (isset($config[$key])) {
                     $config[$key] = $val;
                 }
             }
-        }
+        }----*/
 
         $_config[0] =& $config;
         return $_config[0];
@@ -89,6 +98,15 @@ if (!function_exists('configItem')) {
         }
 
         return $_config_item[$item];
+    }
+}
+/**
+ *
+ */
+if (!function_exists('setConfigItem')) {
+    function setConfigItem($item,$value=array())
+    {
+        getConfig(array($item => $value));
     }
 }
 

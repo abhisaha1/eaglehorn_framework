@@ -43,4 +43,5 @@ class bootstrap
 }
 
 $base = new Base($extended = false);
+$base->setEnvironment();
 new bootstrap($base);
