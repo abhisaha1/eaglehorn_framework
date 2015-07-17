@@ -13,27 +13,18 @@ namespace Eaglehorn;
  * @filesource
  * @desc           Base class responsible for handling controllers
  */
+/**
+ * Class Base
+ * @package Eaglehorn
+ */
 class Base
 {
-
-    /**
-     * Holds an instance of the loader object which is responsible for loading models, views, controller, workers.
-     * @var object
-     */
-    public $load = null;
-
-    /**
-     * Holds the variables which are generated dynamically.
-     * @var array
-     */
-    public $attr = array();
 
     /**
      * Checks if only one instance of loader class is available. If not it creates one.
      * @var object
      */
     private static $loaderInstance;
-
     /**
      * Loads all the custom hooks called be user
      * @var array
@@ -44,7 +35,16 @@ class Base
      * @var object
      */
     private static $baseInstance;
-
+    /**
+     * Holds an instance of the loader object which is responsible for loading models, views, controller, workers.
+     * @var object
+     */
+    public $load = null;
+    /**
+     * Holds the variables which are generated dynamically.
+     * @var array
+     */
+    public $attr = array();
     /**
      * Stores template data.
      * @var array
@@ -75,6 +75,9 @@ class Base
         self::$baseInstance =& $this;
     }
 
+    /**
+     * Set the logger.
+     */
     private function _setLogger()
     {
         $loggerConfig = configItem('logger');
@@ -93,6 +96,11 @@ class Base
         $this->logger = new $class_ns($loggerConfig['file'], $loggerConfig['level']);
     }
 
+    /**
+     * Returns true if a particular hook is active.
+     * @param $hook
+     * @return boolean
+     */
     public function hookActive($hook)
     {
         return self::$hooks[$hook]['active'];

@@ -14,14 +14,19 @@
  */
 
 /**
- * Loads all *.config.php files
+ * Loads all *.config.php files from config/default
  * This function lets us grab the config file even if the Config class
  * hasn't been instantiated yet
  *
  * @access    private
  * @return    array
  */
-if (!function_exists('getConfig')) {
+if (!function_exists('getConfig'))
+{
+    /**
+     * @param array $replace
+     * @return array
+     */
     function &getConfig($replace = array())
     {
         static $_config;
@@ -74,14 +79,6 @@ if (!function_exists('getConfig')) {
     }
 }
 
-function get_ns($path,$app_dir) {
-    //base filename of the controller
-    $class = basename($path, '.php');
-    preg_match("/(?<=$app_dir).*?(?=$class)/s", $path, $match);
-    return str_replace("/","\\",$app_dir.$match[0]);
-}
-// ------------------------------------------------------------------------
-
 /**
  * Returns the specified config item
  *
@@ -89,6 +86,10 @@ function get_ns($path,$app_dir) {
  * @return    mixed
  */
 if (!function_exists('configItem')) {
+    /**
+     * @param $item
+     * @return bool
+     */
     function configItem($item)
     {
         static $_config_item = array();
@@ -106,83 +107,88 @@ if (!function_exists('configItem')) {
     }
 }
 
-function getEnvironment()
+/**
+ * @return array
+ */
+if(!function_exists('get_environment'))
 {
+    function getEnvironment()
+    {
+        static $_env_config = array();
 
-    static $_env_config = array();
+        if (empty($_env_config)){
+            $host = $_SERVER['HTTP_HOST'];
 
-    if (empty($_env_config)){
-        $host = $_SERVER['HTTP_HOST'];
+            $config = require(root . 'config/environment.config.php');
 
-        $config = require(root . 'config/environment.config.php');
+            foreach ($config['environment'] as $env => $url) {
+                if (strpos($url, $host) > 0) {
 
-        foreach ($config['environment'] as $env => $url) {
-            if (strpos($url, $host) > 0) {
+                    $_env_config = array(
+                        'environment' => $env,
+                        'url' => $url
+                    );
 
-                $_env_config = array(
-                    'environment' => $env,
-                    'url' => $url
-                );
-
-                break;
+                    break;
+                }
             }
         }
-    }
 
-    return $_env_config;
+        return $_env_config;
+    }
 }
 
 /**
  *
  */
-if (!function_exists('setConfigItem')) {
+if (!function_exists('setConfigItem'))
+{
+    /**
+     * @param $item
+     * @param array $value
+     */
     function setConfigItem($item,$value=array())
     {
         getConfig(array($item => $value));
     }
 }
 
-function getController()
+/**
+ * @return mixed
+ */
+if (!function_exists('getController'))
 {
-
-    return Eaglehorn\Router::$callback[0];
-}
-
-function getMethod()
-{
-
-    return Eaglehorn\Router::$callback[1];
-}
-
-function getParameters($index = false)
-{
-
-    if ($index !== false) {
-        return isset(Eaglehorn\Router::$callback[2][$index]) ? Eaglehorn\Router::$callback[2][$index] : null;
+    function getController()
+    {
+        return Eaglehorn\Router::$callback[0];
     }
-    return Eaglehorn\Router::$callback[2];
 }
-
 
 /**
- * Creates a anchor tag
- *
- * @param string $href
- * @param string $linkname
- * @param string $id
- * @param string $class
- * @param string $title
- * @return string
+ * @return mixed
  */
-function anchor($href, $linkname, $id = '', $class = '', $title = '')
+if(!function_exists('get_method'))
 {
-
-    if (substr($href, 0, 7) == "http://" || substr($href, 0, 8) == "https://")
-        return "<a href='$href' title='$title' id='$id' class='$class'>$linkname</a>";
-    else
-        return "<a href='" . configItem('site')['url'] . "$href' title='$title' id='$id' class='$class'>$linkname</a>";
+    function getMethod()
+    {
+        return Eaglehorn\Router::$callback[1];
+    }
 }
 
+/**
+ * @param bool $index
+ * @return null
+ */
+if(!function_exists('getParameters'))
+{
+    function getParameters($index = false)
+    {
+        if ($index !== false) {
+            return isset(Eaglehorn\Router::$callback[2][$index]) ? Eaglehorn\Router::$callback[2][$index] : null;
+        }
+        return Eaglehorn\Router::$callback[2];
+    }
+}
 
 /**
  * Used to encrypt a string
@@ -190,22 +196,24 @@ function anchor($href, $linkname, $id = '', $class = '', $title = '')
  * @param type $string
  * @return type
  */
-function encodeString($string)
+if(!function_exists('encodeString'))
 {
+    function encodeString($string)
+    {
+        $encrypt_method = "AES-256-CBC";
+        $secret_key = configItem('secret');
+        $secret_iv = configItem('secret');
 
-    $encrypt_method = "AES-256-CBC";
-    $secret_key = configItem('secret');
-    $secret_iv = configItem('secret');
 
+        $key = hash('sha256', $secret_key);
 
-    $key = hash('sha256', $secret_key);
+        // iv - encrypt method AES-256-CBC expects 16 bytes - else you will get a warning
+        $iv = substr(hash('sha256', $secret_iv), 0, 16);
 
-    // iv - encrypt method AES-256-CBC expects 16 bytes - else you will get a warning
-    $iv = substr(hash('sha256', $secret_iv), 0, 16);
+        $output = openssl_encrypt($string, $encrypt_method, $key, 0, $iv);
+        return base64_encode($output);
 
-    $output = openssl_encrypt($string, $encrypt_method, $key, 0, $iv);
-    return base64_encode($output);
-
+    }
 }
 
 /**
@@ -214,19 +222,22 @@ function encodeString($string)
  * @param type $encrypted_string
  * @return type
  */
-function decodeString($encrypted_string)
+if(!function_exists('decodeString'))
 {
+    function decodeString($encrypted_string)
+    {
 
-    $encrypt_method = "AES-256-CBC";
-    $secret_key = configItem('secret');
-    $secret_iv = configItem('secret');
+        $encrypt_method = "AES-256-CBC";
+        $secret_key = configItem('secret');
+        $secret_iv = configItem('secret');
 
 
-    $key = hash('sha256', $secret_key);
+        $key = hash('sha256', $secret_key);
 
-    // iv - encrypt method AES-256-CBC expects 16 bytes - else you will get a warning
-    $iv = substr(hash('sha256', $secret_iv), 0, 16);
-    return openssl_decrypt(base64_decode($encrypted_string), $encrypt_method, $key, 0, $iv);
+        // iv - encrypt method AES-256-CBC expects 16 bytes - else you will get a warning
+        $iv = substr(hash('sha256', $secret_iv), 0, 16);
+        return openssl_decrypt(base64_decode($encrypted_string), $encrypt_method, $key, 0, $iv);
+    }
 }
 
 /**
@@ -235,15 +246,17 @@ function decodeString($encrypted_string)
  * @param array $var
  * @param int   $mode - 2 to dump the array
  */
-function display($var, $mode = 1)
+if(!function_exists('display'))
 {
-
-    if ($mode == 1) {
-        echo "<pre>";
-        print_r($var);
-        echo "</pre>";
-    } else {
-        var_dump($var);
+    function display($var, $mode = 1)
+    {
+        if ($mode == 1) {
+            echo "<pre>";
+            print_r($var);
+            echo "</pre>";
+        } else {
+            var_dump($var);
+        }
     }
 }
 
@@ -255,24 +268,27 @@ function display($var, $mode = 1)
  * @param string $ext
  * @return array
  */
-function getFilesFromFolder($folderPath, $filepath = false, $ext = 'php')
+if(!function_exists('getFilesFromFolder'))
 {
+    function getFilesFromFolder($folderPath, $filepath = false, $ext = 'php')
+    {
 
-    $handle = glob($folderPath . '/*.' . $ext);
+        $handle = glob($folderPath . '/*.' . $ext);
 
-    if (!$filepath) {
+        if (!$filepath) {
 
-        $filenames = array();
+            $filenames = array();
 
-        foreach ($handle as $key => $filelocation) {
+            foreach ($handle as $key => $filelocation) {
 
-            $filenames[] = str_replace(".$ext", "", basename(preg_replace('/^.+\\\\/', '', $filelocation)));
+                $filenames[] = str_replace(".$ext", "", basename(preg_replace('/^.+\\\\/', '', $filelocation)));
+            }
+
+            return $filenames;
+        } else {
+
+            return $handle;
         }
-
-        return $filenames;
-    } else {
-
-        return $handle;
     }
 }
 
@@ -282,21 +298,24 @@ function getFilesFromFolder($folderPath, $filepath = false, $ext = 'php')
  * @param string $dir
  * @return array
  */
-function getSubDirectories($dir)
+if(!function_exists('getSubDirectories'))
 {
+    function getSubDirectories($dir)
+    {
 
-    $handle = glob($dir . '/*', GLOB_ONLYDIR);
+        $handle = glob($dir . '/*', GLOB_ONLYDIR);
 
-    $subFolders = array();
+        $subFolders = array();
 
-    foreach ($handle as $subfolder) {
+        foreach ($handle as $subfolder) {
 
-        $subfolderSplit = explode("/", $subfolder);
+            $subfolderSplit = explode("/", $subfolder);
 
-        $subFolders[] = $subfolderSplit[sizeof($subfolderSplit) - 1];
+            $subFolders[] = $subfolderSplit[sizeof($subfolderSplit) - 1];
+        }
+
+        return $subFolders;
     }
-
-    return $subFolders;
 }
 
 
@@ -305,10 +324,12 @@ function getSubDirectories($dir)
  *
  * @return string
  */
-function getBrowser()
+if(!function_exists('getBrowser'))
 {
-
-    return $_SERVER ['HTTP_USER_AGENT'];
+    function getBrowser()
+    {
+        return $_SERVER ['HTTP_USER_AGENT'];
+    }
 }
 
 /**
@@ -317,37 +338,40 @@ function getBrowser()
  * @param string $url
  * @return boolean
  */
-function isUrlOnline($url)
+if(!function_exists('isUrlOnline'))
 {
-    $url = @parse_url($url);
-    if (!$url)
-        return false;
-
-    $url = array_map('trim', $url);
-    $url['port'] = (!isset($url['port'])) ? 80 : (int)$url['port'];
-
-    $path = (isset($url['path'])) ? $url['path'] : '/';
-    $path .= (isset($url['query'])) ? "?$url[query]" : '';
-
-    if (isset($url['host']) && $url['host'] != gethostbyname($url['host'])) {
-
-        $fp = fsockopen($url['host'], $url['port'], $errno, $errstr, 30);
-
-        if (!$fp)
-            return false; //socket not opened
-
-        fputs($fp, "HEAD $path HTTP/1.1\r\nHost: $url[host]\r\n\r\n"); //socket opened
-        $headers = fread($fp, 4096);
-        fclose($fp);
-
-        if (preg_match('#^HTTP/.*\s+[(200|301|302)]+\s#i', $headers)) {
-            //matching header
-            return true;
-        } else
+    function isUrlOnline($url)
+    {
+        $url = @parse_url($url);
+        if (!$url)
             return false;
-    } // if parse url
-    else
-        return false;
+
+        $url = array_map('trim', $url);
+        $url['port'] = (!isset($url['port'])) ? 80 : (int)$url['port'];
+
+        $path = (isset($url['path'])) ? $url['path'] : '/';
+        $path .= (isset($url['query'])) ? "?$url[query]" : '';
+
+        if (isset($url['host']) && $url['host'] != gethostbyname($url['host'])) {
+
+            $fp = fsockopen($url['host'], $url['port'], $errno, $errstr, 30);
+
+            if (!$fp)
+                return false; //socket not opened
+
+            fputs($fp, "HEAD $path HTTP/1.1\r\nHost: $url[host]\r\n\r\n"); //socket opened
+            $headers = fread($fp, 4096);
+            fclose($fp);
+
+            if (preg_match('#^HTTP/.*\s+[(200|301|302)]+\s#i', $headers)) {
+                //matching header
+                return true;
+            } else
+                return false;
+        } // if parse url
+        else
+            return false;
+    }
 }
 
 
@@ -357,11 +381,13 @@ function isUrlOnline($url)
  * @param array $array
  * @return object
  */
-function arrayToObject($array)
+if(!function_exists('arrayToObject'))
 {
-
-    if (is_array($array))
-        return json_decode(json_encode($array), FALSE);
+    function arrayToObject($array)
+    {
+        if (is_array($array))
+            return json_decode(json_encode($array), FALSE);
+    }
 }
 
 /**
@@ -388,8 +414,6 @@ function getRandomString($length = 6)
     $validCharacters = "abcdefghijklmnopqrstuxyvwzABCDEFGHIJKLMNOPQRSTUXYVWZ+-*#&@!?";
     $validCharNumber = strlen($validCharacters);
     $result = "";
-
-
     for ($i = 0; $i < $length; $i++) {
 
         $index = mt_rand(0, $validCharNumber - 1);
@@ -400,148 +424,115 @@ function getRandomString($length = 6)
     return $result;
 }
 
+/**
+ * Get the user id from an email
+ * @param $email
+ * @return mixed
+ */
 function getUserIdFromEmail($email)
 {
     return preg_replace('/([^@]*).*/', '$1', $email);
 }
 
-function ifPostExist($name)
+/**
+ * Check if a request parameter exist.
+ * @param $name
+ * @return string
+ */
+function ifRequestExist($name)
 {
-
     return isset($_REQUEST[$name]) ? $_REQUEST[$name] : "";
 }
 
-function getDates()
+/**
+ * @param $url
+ * @return string
+ */
+if(!function_exists('addHttp'))
 {
-
-    $dates = array();
-    for ($date = 1; $date <= 31; $date++) {
-        $dates[] = $date;
-    }
-    return $dates;
-}
-
-function getYears()
-{
-    $current_year = idate('Y');
-    $years = array();
-    for ($year = (int)$current_year; $year >= 1940; $year--) {
-        $years[] = $year;
-    }
-    return $years;
-}
-
-function getMonths()
-{
-
-    $months = array();
-    for ($iM = 1; $iM <= 12; $iM++) {
-        $months[$iM] = date("F", strtotime("$iM/12/10"));
-    }
-    return $months;
-}
-
-function show404()
-{
-    include_once COREDIR . 'common/error/404.php';
-    die();
-}
-
-function searchForId($key, $value, $array)
-{
-
-    foreach ($array as $val) {
-        if ($val[$key] === $value) {
-            return true;
+    function addHttp($url)
+    {
+        if (!preg_match("~^(?:f|ht)tps?://~i", $url)) {
+            $url = "http://" . $url;
         }
+        return $url;
     }
-    return false;
 }
 
-function addHttp($url)
+/**
+ * @param $string
+ * @return mixed
+ */
+if(!function_exists('fixWordText'))
 {
-    if (!preg_match("~^(?:f|ht)tps?://~i", $url)) {
-        $url = "http://" . $url;
+    function fixWordText($string)
+    {
+        $search = array(// www.fileformat.info/info/unicode/<NUM>/ <NUM> = 2018
+            "\xC2\xAB", // « (U+00AB) in UTF-8
+            "\xC2\xBB", // » (U+00BB) in UTF-8
+            "\xE2\x80\x98", // ‘ (U+2018) in UTF-8
+            "\xE2\x80\x99", // ’ (U+2019) in UTF-8
+            "\xE2\x80\x9A", // ‚ (U+201A) in UTF-8
+            "\xE2\x80\x9B", // ‛ (U+201B) in UTF-8
+            "\xE2\x80\x9C", // “ (U+201C) in UTF-8
+            "\xE2\x80\x9D", // ” (U+201D) in UTF-8
+            "\xE2\x80\x9E", // „ (U+201E) in UTF-8
+            "\xE2\x80\x9F", // ‟ (U+201F) in UTF-8
+            "\xE2\x80\xB9", // ‹ (U+2039) in UTF-8
+            "\xE2\x80\xBA", // › (U+203A) in UTF-8
+            "\xE2\x80\x93", // – (U+2013) in UTF-8
+            "\xE2\x80\x94", // — (U+2014) in UTF-8
+            "\xE2\x80\xA6", // … (U+2026) in UTF-8
+            "\xE2\x80\xA2", // bullet (U+2026) in UTF-8
+            "â€¢"  // … (U+2026) in UTF-8
+        );
+
+        $replacements = array(
+            "<<", // «
+            ">>", // »
+            "'", // ‘
+            "'", // ’
+            "'", // ‚ (U+201A) in UTF-8
+            "'", // ‛ (U+201B) in UTF-8
+            '"', // “ (U+201C) in UTF-8
+            '"', // ” (U+201D) in UTF-8
+            '"', // „ (U+201E) in UTF-8
+            '"', // ‟ (U+201F) in UTF-8
+            "<", // ‹ (U+2039) in UTF-8
+            ">", // › (U+203A) in UTF-8
+            "-", // – (U+2013) in UTF-8
+            "-", // – (U+2014) in UTF-8
+            "...", // // … (U+2026) in UTF-8
+            "&bull;", // – (U+2014) in UTF-8
+            "&bull;"
+        );
+
+        return str_replace($search, $replacements, $string);
     }
-    return $url;
 }
 
-function fixWordText($string)
+/**
+ * Gets the clinet ip
+ * @return string
+ */
+if(!function_exists('getClientIp'))
 {
-    $search = array(// www.fileformat.info/info/unicode/<NUM>/ <NUM> = 2018
-        "\xC2\xAB", // « (U+00AB) in UTF-8
-        "\xC2\xBB", // » (U+00BB) in UTF-8
-        "\xE2\x80\x98", // ‘ (U+2018) in UTF-8
-        "\xE2\x80\x99", // ’ (U+2019) in UTF-8
-        "\xE2\x80\x9A", // ‚ (U+201A) in UTF-8
-        "\xE2\x80\x9B", // ‛ (U+201B) in UTF-8
-        "\xE2\x80\x9C", // “ (U+201C) in UTF-8
-        "\xE2\x80\x9D", // ” (U+201D) in UTF-8
-        "\xE2\x80\x9E", // „ (U+201E) in UTF-8
-        "\xE2\x80\x9F", // ‟ (U+201F) in UTF-8
-        "\xE2\x80\xB9", // ‹ (U+2039) in UTF-8
-        "\xE2\x80\xBA", // › (U+203A) in UTF-8
-        "\xE2\x80\x93", // – (U+2013) in UTF-8
-        "\xE2\x80\x94", // — (U+2014) in UTF-8
-        "\xE2\x80\xA6", // … (U+2026) in UTF-8
-        "\xE2\x80\xA2", // bullet (U+2026) in UTF-8
-        "â€¢"  // … (U+2026) in UTF-8
-    );
-
-    $replacements = array(
-        "<<", // « 
-        ">>", // »
-        "'", // ‘
-        "'", // ’
-        "'", // ‚ (U+201A) in UTF-8
-        "'", // ‛ (U+201B) in UTF-8
-        '"', // “ (U+201C) in UTF-8
-        '"', // ” (U+201D) in UTF-8
-        '"', // „ (U+201E) in UTF-8
-        '"', // ‟ (U+201F) in UTF-8
-        "<", // ‹ (U+2039) in UTF-8
-        ">", // › (U+203A) in UTF-8
-        "-", // – (U+2013) in UTF-8
-        "-", // – (U+2014) in UTF-8
-        "...", // // … (U+2026) in UTF-8
-        "&bull;", // – (U+2014) in UTF-8
-        "&bull;"
-    );
-
-    return str_replace($search, $replacements, $string);
-}
-
-function autoVersion($filename, $type)
-{
-
-    if ($type == "js") {
-        $fileurl = VIEWURL . 'js/' . $filename;
-        $filepath = VIEWDIR . 'js/' . $filename;
-    } else if ($type == "css") {
-        $fileurl = VIEWURL . 'css/' . $filename;
-        $filepath = VIEWDIR . 'css/' . $filename;
+    function getClientIp()
+    {
+        if (getenv('HTTP_CLIENT_IP'))
+            $ipaddress = getenv('HTTP_CLIENT_IP');
+        else if (getenv('HTTP_X_FORWARDED_FOR'))
+            $ipaddress = getenv('HTTP_X_FORWARDED_FOR');
+        else if (getenv('HTTP_X_FORWARDED'))
+            $ipaddress = getenv('HTTP_X_FORWARDED');
+        else if (getenv('HTTP_FORWARDED_FOR'))
+            $ipaddress = getenv('HTTP_FORWARDED_FOR');
+        else if (getenv('HTTP_FORWARDED'))
+            $ipaddress = getenv('HTTP_FORWARDED');
+        else if (getenv('REMOTE_ADDR'))
+            $ipaddress = getenv('REMOTE_ADDR');
+        else
+            $ipaddress = 'UNKNOWN';
+        return $ipaddress;
     }
-
-
-    $mtime = filemtime($filepath);
-    return $fileurl . '?t=' . $mtime;
-}
-
-function getClientIp()
-{
-    if (getenv('HTTP_CLIENT_IP'))
-        $ipaddress = getenv('HTTP_CLIENT_IP');
-    else if (getenv('HTTP_X_FORWARDED_FOR'))
-        $ipaddress = getenv('HTTP_X_FORWARDED_FOR');
-    else if (getenv('HTTP_X_FORWARDED'))
-        $ipaddress = getenv('HTTP_X_FORWARDED');
-    else if (getenv('HTTP_FORWARDED_FOR'))
-        $ipaddress = getenv('HTTP_FORWARDED_FOR');
-    else if (getenv('HTTP_FORWARDED'))
-        $ipaddress = getenv('HTTP_FORWARDED');
-    else if (getenv('REMOTE_ADDR'))
-        $ipaddress = getenv('REMOTE_ADDR');
-    else
-        $ipaddress = 'UNKNOWN';
-    return $ipaddress;
 }

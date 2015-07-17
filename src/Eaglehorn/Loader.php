@@ -3,7 +3,7 @@ namespace Eaglehorn;
 
 /**
  * EagleHorn
- * An open source application development framework for PHP 5.1.6 or newer
+ * An open source application development framework for PHP 5.4 or newer
  *
  * @package        EagleHorn
  * @author         Abhishek Saha <abhisheksaha11 AT gmail DOT com>
@@ -12,6 +12,10 @@ namespace Eaglehorn;
  * @since          Version 1.0
  * @filesource
  * @desc           Responsible for loading Models, Views, Templates, Controllers and Workers
+ */
+/**
+ * Class Loader
+ * @package Eaglehorn
  */
 class Loader
 {
@@ -46,8 +50,14 @@ class Loader
      */
     private $logger;
 
+    /**
+     * @var string
+     */
     private $app_folder = 'application';
 
+    /**
+     * @var
+     */
     private $loading;
     /**
      * @param Logger $logger
@@ -148,7 +158,7 @@ class Loader
         $class = basename($file, '.php');
 
         //Get the namespace
-        $ns = get_ns($file,$this->app_folder);
+        $ns = $this->get_ns($file,$this->app_folder);
 
         //Check if this controller has been included
         if (!isset($this->_loaded_controllers[$controller])) {
@@ -201,42 +211,17 @@ class Loader
         return $this->_createInstance('application\model\\', $class, $params, $method_name, $data);
     }
 
+
     /**
-     * Creates an instance of the assembly. Can be initialized along with
-     *  - constructor parameters
-     *  - method
-     *  - method parameters
+     * Creates an instance of the component which is being loaded.
      *
-     * @param        $assemble
-     * @param array  $params
-     * @param string $method_name
-     * @param array  $data
-     * @return object|string
+     * @param $namespace
+     * @param $class
+     * @param $params
+     * @param $method_name
+     * @param $data
+     * @return object
      */
-    public function assembly($assemble, $params = array(), $method_name = "", $data = array())
-    {
-        if (!is_array($assemble)) {
-            $assemble = array($assemble);
-        }
-        $assembly = "";
-        foreach ($assemble as $assembly) {
-
-            $file = configItem('site')['assemblydir'] . implode('/', explode('-', $assembly)) . '.php';
-
-            $class = basename($file, '.php');
-
-            if (!file_exists($file)) {
-
-                $this->logger->error("The assembly $file was not found");
-
-            }
-            $this->loading[] = 'assembly';
-            $assembly = $this->$class = $this->_createInstance('Eaglehorn\assembly\\' . $class . '\\', $class, $params, $method_name, $data);
-        }
-
-        return $assembly;
-    }
-
     private function _createInstance($namespace, $class, $params, $method_name, $data)
     {
         $ns_class = $namespace . $class;
@@ -276,11 +261,22 @@ class Loader
         return $instance;
     }
 
+    /**
+     * Clears the current Loader
+     */
     protected function clearCurrentLoader()
     {
         array_pop($this->loading);
     }
 
+    /**
+     * Triggers a hook
+     * @param $instance
+     * @param $hook_name
+     * @param string $class
+     * @param string $method_name
+     * @param array $data
+     */
     protected function loaderHooks($instance,$hook_name,$class='',$method_name='',$data=array())
     {
         $hooks = configItem('hooks');
@@ -295,6 +291,20 @@ class Loader
             call_user_func_array(array($hook_instance, $hooks[$hook_name]['method']), array($instance,$class,$method_name,$data));
         }
 
+    }
+
+
+    /**
+     * Get namespace
+     * @param $path
+     * @param $app_dir
+     * @return mixed
+     */
+    protected function get_ns($path,$app_dir) {
+        //base filename of the controller
+        $class = basename($path, '.php');
+        preg_match("/(?<=$app_dir).*?(?=$class)/s", $path, $match);
+        return str_replace("/","\\",$app_dir.$match[0]);
     }
 
 }
