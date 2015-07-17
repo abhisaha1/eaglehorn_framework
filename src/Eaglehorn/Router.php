@@ -148,6 +148,7 @@ class Router
             $controller = ($result[0] == "") ? configItem('site')['default_controller'] : str_replace('-', '/', $result[0]);
             //if no method, set it to index
             $method = isset($result[1]) ? $result[1] : 'index';
+
             //if controller is valid file
             if (self::fileExists($file = ucfirst(configItem('site')['cust_controller_dir']) . $controller . '.php',false)) {
                 self::$callback = array(ucFirst($controller), $method, self::$_attr);

@@ -38,14 +38,27 @@ if (!function_exists('getConfig')) {
             return $_config[0];
         }
 
-        foreach (glob(root."/config/*.config.php") as $app_config)
+        //include environment based configurations
+        $env = getEnvironment();
+
+        //include default configurations
+        foreach (glob(root."/config/default/*.config.php") as $app_config)
         {
             if(file_exists($app_config)) {
                 require $app_config;
             }
         }
+        if($env != "default")
+        {
+            foreach (glob(root."/config/{$env['environment']}/*.config.php") as $app_config)
+            {
+                if(file_exists($app_config)) {
+                    require $app_config;
+                }
+            }
+        }
 
-        $core_config_file = $core_config_file = dirname(__DIR__) . '/config/config.php';
+        $core_config_file = dirname(__DIR__) . '/config/config.php';
 
         require($core_config_file);
 
@@ -54,15 +67,7 @@ if (!function_exists('getConfig')) {
             exit('Your config file does not appear to be formatted correctly.');
         }
 
-        // Are any values being dynamically replaced?
-        /**----
-        if (count($replace) > 0) {
-            foreach ($replace as $key => $val) {
-                if (isset($config[$key])) {
-                    $config[$key] = $val;
-                }
-            }
-        }----*/
+        $config['site']['url'] = $env['url'];
 
         $_config[0] =& $config;
         return $_config[0];
@@ -100,6 +105,33 @@ if (!function_exists('configItem')) {
         return $_config_item[$item];
     }
 }
+
+function getEnvironment()
+{
+
+    static $_env_config = array();
+
+    if (empty($_env_config)){
+        $host = $_SERVER['HTTP_HOST'];
+
+        $config = require(root . 'config/environment.config.php');
+
+        foreach ($config['environment'] as $env => $url) {
+            if (strpos($url, $host) > 0) {
+
+                $_env_config = array(
+                    'environment' => $env,
+                    'url' => $url
+                );
+
+                break;
+            }
+        }
+    }
+
+    return $_env_config;
+}
+
 /**
  *
  */
