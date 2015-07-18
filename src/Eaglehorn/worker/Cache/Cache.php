@@ -37,7 +37,6 @@ class Cache
      * Default constructor
      *
      * @param string|array [optional] $config
-     * @return \Cache
      */
     public function __construct($config = null)
     {
