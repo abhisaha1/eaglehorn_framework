@@ -14,6 +14,8 @@ namespace Eaglehorn;
  * @desc           Fires up the application.
  */
 
+use Eaglehorn\error\ErrorHandler;
+
 require root . 'application/router.php';
 
 class bootstrap
@@ -27,7 +29,7 @@ class bootstrap
      */
     function __construct($base)
     {
-        $this->route_callback = Router::execute();
+        $this->route_callback = Router::execute($base);
 
         if(is_callable($this->route_callback[0]))
         {
@@ -43,5 +45,4 @@ class bootstrap
 }
 
 $base = new Base($extended = false);
-//$base->setEnvironment();
 new bootstrap($base);

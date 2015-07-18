@@ -38,6 +38,7 @@ class Router
      */
     private static $_attr = array();
 
+    private static $_base;
     /**
      * Function used to add routes
      *
@@ -47,17 +48,7 @@ class Router
      */
     static function route($source, $destination, $priority = 10)
     {
-//        if(is_callable($destination))
-//        {
-//            $destination();
-//        }
-//        else
-//        {
-//            self::match($source, $destination, $priority);
-//        }
-
         self::match($source, $destination, $priority);
-
     }
 
     /**
@@ -65,8 +56,10 @@ class Router
      *
      * @return mixed
      */
-    static function execute()
+    static function execute(Base $base)
     {
+
+        self::$_base = $base;
         //first we separate the parameters
         $request = isset($_REQUEST['route']) ? $_REQUEST['route'] : '/';
 
@@ -153,7 +146,13 @@ class Router
             if (self::fileExists($file = ucfirst(configItem('site')['cust_controller_dir']) . $controller . '.php',false)) {
                 self::$callback = array(ucFirst($controller), $method, self::$_attr);
             } else {
-                die("<b>Exception: </b>Incorrect routing");
+                self::$_base->hook('404',array(
+                    'file' => $file,
+                    'controller' => $controller,
+                    'method' => $method,
+                    'message' => '404'
+                ));
+                die();
             }
         }
 

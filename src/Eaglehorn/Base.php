@@ -63,6 +63,9 @@ class Base
     public function __construct($extended = true)
     {
 
+        $error = new error\ErrorHandler($this);
+        $error->setHandlers();
+
         self::$hooks = configItem('hooks');
 
         $this->_setLogger();
@@ -176,5 +179,22 @@ class Base
         }
         return $content;
     }
+
+    public function hook($hook_name,$data)
+    {
+        $hooks = configItem('hooks');
+
+        if(isset($hooks[$hook_name]) && $hooks[$hook_name]['active'])
+        {
+            $ns         = "\\application\\".$hooks[$hook_name]['namespace'];
+            $hook_class = $hooks[$hook_name]['class'];
+            $class_ns   = "$ns\\$hook_class";
+
+            $hook_instance = new $class_ns();
+            call_user_func_array(array($hook_instance, $hooks[$hook_name]['method']), array($data));
+        }
+    }
+
+    function handleError($error){}
 
 }

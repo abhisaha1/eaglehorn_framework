@@ -64,9 +64,9 @@ class Logger extends AbstractLogger
     /**
      * Class constructor
      *
-     * @param string     $logDirectory      File path to the logging directory
+     * @param string $logDirectory File path to the logging directory
      * @param int|string $logLevelThreshold The LogLevel Threshold
-     * @return \Eaglehorn\Logger
+     * @throws \Exception
      */
     public function __construct($logDirectory, $logLevelThreshold = LogLevel::DEBUG)
     {
@@ -83,14 +83,14 @@ class Logger extends AbstractLogger
             {
                 if(!is_writable($logDirectory))
                 {
-                    throw new \Exception("Couldn't create the log directory: $logDirectory");
+                    throw new \RuntimeException("Couldn't create the log directory: $logDirectory");
                 }
                 mkdir($logDirectory, $this->defaultPermissions, true);
             }
 
             if (!is_writable($logDirectory))
             {
-                throw new \Exception('The log folder <code><i>' . $logDirectory . '</i></code> is read-only. Give write permissions.');
+                throw new \RuntimeException('The log folder <i>' . $logDirectory . '</i> is read-only. Give write permissions.',1);
             }
 
             $this->logFilePath = $logDirectory . DIRECTORY_SEPARATOR . 'log_' . date('Y-m-d') . '.txt';

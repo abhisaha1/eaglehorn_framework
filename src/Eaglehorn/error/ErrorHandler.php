@@ -1,6 +1,8 @@
 <?php
 namespace Eaglehorn\error;
 
+use Eaglehorn\Base;
+
 /**
  * EagleHorn
  * An open source application development framework for PHP 5.4 or newer
@@ -14,10 +16,15 @@ namespace Eaglehorn\error;
  */
 class ErrorHandler
 {
+    protected $base;
 
+    public function __construct(Base $base)
+    {
+        $this->base = $base;
+    }
 
     // CATCHABLE ERRORS
-    public static function captureNormal($number, $message, $file, $line)
+    public function captureNormal($number, $message, $file, $line)
     {
         $type = "";
         switch ($number) {
@@ -85,91 +92,37 @@ class ErrorHandler
                 break;
         }
 
+        $error['heading'] = $type;
+        $error['message'] = $message;
+        $error['type'] = $type;
+        $error['code'] = 0;
+        $error['file'] = $file;
+        $error['line'] = $line;
+        $error['trace'] = '';
+        $error['date'] = date('M d, Y h:iA');
 
-        // Insert all in one table
-        $error = array('type' => $type, 'message' => $message, 'file' => $file, 'line' => $line);
-
-        $date = date('M d, Y h:iA');
-
-        $log_message = "<code><h1>A PHP Error was encountered:</h1>
-         <p>
-            <strong>Date:</strong> {$date}
-         </p>
-         
-        <p>
-            <strong>Error No:</strong> {$number}
-         </p>
-          
-         <p>
-            <strong>Type:</strong> {$type}
-         </p>
-         
-         <p>
-            <strong>Message:</strong> {$message}
-         </p>
-          
-         <p>
-            <strong>File:</strong> {$file}
-         </p>
-          
-         <p>
-            <strong>Line:</strong> {$line}
-         </p>       
-         
-         </code>";
-
-        include_once 'error_template.php';
+        self::display($error);
 
     }
 
     // EXTENSIONS
-    public static function captureException($exception)
+    public function captureException($exception)
     {
+        $error['heading'] = 'Exception';
+        $error['message'] = $exception->getMessage();
+        $error['type'] = 'Exception';
+        $error['code'] = $exception->getCode();
+        $error['file'] = $exception->getFile();
+        $error['line'] = $exception->getLine();
+        $error['trace'] = $exception->getTraceAsString();
+        $error['date'] = date('M d, Y h:iA');
 
-        $message = $exception->getMessage();
-        $code = $exception->getCode();
-        $file = $exception->getFile();
-        $line = $exception->getLine();
-        $trace = $exception->getTraceAsString();
-        $date = date('M d, Y h:iA');
-
-        $log_message = "<code><h1>Exception information:</h1>
-         <p>
-            <strong>Date:</strong> {$date}
-         </p>
-          
-         <p>
-            <strong>Message:</strong> {$message}
-         </p>
-         
-         <p>
-            <strong>Code:</strong> {$code}
-         </p>
-          
-         <p>
-            <strong>File:</strong> {$file}
-         </p>
-          
-         <p>
-            <strong>Line:</strong> {$line}
-         </p>";
-
-        if(configItem('logger')['stack'])
-        {
-            $log_message .= "<h3>Stack trace:</h3>
-                 <pre>{$trace}
-                 </pre>
-                 <br />";
-        }
-
-        $log_message .= "</code>";
-
-        include_once 'error_template.php';
+        self::display($error);
 
     }
 
     // UNCATCHABLE ERRORS
-    public static function captureShutdown()
+    public function captureShutdown()
     {
         $error = error_get_last();
         if ($error) {
@@ -182,22 +135,73 @@ class ErrorHandler
         }
     }
 
+    /**
+     * @param mixed $error
+     */
+    function display($error)
+    {
+        $log_message = "<code><h1>{$error['heading']}</h1>
+         <p>
+            <strong>Date:</strong> {$error['date']}
+         </p>
+
+         <p>
+            <strong>Type:</strong> {$error['type']}
+         </p>
+
+         <p>
+            <strong>Message:</strong> {$error['message']}
+         </p>
+
+         <p>
+            <strong>File:</strong> {$error['file']}
+         </p>
+
+         <p>
+            <strong>Line:</strong> {$error['line']}
+         </p>";
+
+        if (configItem('logger')['stack']) {
+            $log_message .= "<h3>Stack trace:</h3>
+                 <pre>{$error['trace']}
+                 </pre>
+                 <br />";
+        }
+
+        $log_message .= "</code>";
+
+        $this->base->hook('error',$error);
+
+        include_once 'error_template.php';
+    }
+
+    /**
+     * Sets the Error Handlers
+     */
+    public function setHandlers()
+    {
+        $error = configItem('error');
+
+        if ($error == 0)
+        {
+            ini_set('display_errors', 0);
+            error_reporting(0);
+        }
+        else if ($error == 2)
+        {
+            error_reporting(0);
+            set_error_handler(array($this, 'captureNormal'));
+            set_exception_handler(array($this, 'captureException'));
+            register_shutdown_function(array($this, 'captureShutdown'));
+
+        }
+        else if ($error == 1)
+        {
+            error_reporting(E_ALL);
+            ini_set('display_errors', 1);
+        }
+    }
+
 }
 
-$error = configItem('error');
-if ($error == 0) {
 
-    ini_set('display_errors', 0);
-    error_reporting(0);
-
-} else if ($error == 2) {
-    error_reporting(0);
-    set_error_handler('Eaglehorn\error\ErrorHandler::captureNormal');
-    set_exception_handler('Eaglehorn\error\ErrorHandler::captureException');
-    register_shutdown_function('Eaglehorn\error\ErrorHandler::captureShutdown');
-
-} else if ($error == 1) {
-    error_reporting(E_ALL);
-    ini_set('display_errors', 1);
-
-}

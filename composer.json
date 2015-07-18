@@ -21,8 +21,7 @@
     },
     "autoload": {
         "files": [
-            "src/Eaglehorn/common/functions.php",
-            "src/Eaglehorn/error/ErrorHandler.php"
+            "src/Eaglehorn/common/functions.php"
         ],
         "psr-4": {
             "Eaglehorn\\":"src/"
