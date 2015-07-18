@@ -33,10 +33,20 @@ if (!function_exists('getConfig'))
 
         if (isset($_config)) {
             // Are any values being dynamically replaced?
-            if (count($replace) > 0) {
-                foreach ($replace as $key => $val) {
-                    if (isset($_config[0][$key])) {
-                        $_config[0][$key] = array_merge($_config[0][$key],$val);
+            if (count($replace) > 0)
+            {
+                foreach ($replace as $key => $val)
+                {
+                    if (isset($_config[0][$key]))
+                    {
+                        if(is_array($_config[0][$key]))
+                        {
+                            $_config[0][$key] = array_merge($_config[0][$key],$val);
+                        }
+                        else
+                        {
+                            $_config[0][$key] = $val;
+                        }
                     }
                 }
             }
