@@ -288,7 +288,15 @@ class Loader
             $class_ns   = "$ns\\$hook_class";
 
             $hook_instance = new $class_ns();
-            call_user_func_array(array($hook_instance, $hooks[$hook_name]['method']), array($instance,$class,$method_name,$data));
+            if($hook_name == 'pre_template')
+            {
+                $para = array($instance,$class,$method_name,$data);
+            }
+            else
+            {
+                $para = array($instance,$data);
+            }
+            call_user_func_array(array($hook_instance, $hooks[$hook_name]['method']), $para);
         }
 
     }
