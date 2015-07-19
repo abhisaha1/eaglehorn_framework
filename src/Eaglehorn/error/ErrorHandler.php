@@ -161,7 +161,7 @@ class ErrorHandler
             <strong>Line:</strong> {$error['line']}
          </p>";
 
-        if (configItem('logger')['stack']) {
+        if ($error['trace'] != '') {
             $log_message .= "<h3>Stack trace:</h3>
                  <pre>{$error['trace']}
                  </pre>
