@@ -570,7 +570,6 @@ class Session
 
             return false;
         }
-display($this->link->errorInfo());
         return $result !== FALSE;
     }
 

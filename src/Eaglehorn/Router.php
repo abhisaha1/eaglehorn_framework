@@ -110,14 +110,12 @@ class Router
             }
         }
 
-        //if no match found, check if the url is valid
-        if (!$matched_route && $request != '/') {
-            self::_set_callback($request);
-
-        }
-
-        if ($request == '/') {
-            self::_set_callback(configItem('site')['default_controller']);
+        if(!$matched_route)
+        {
+            if($request != '/')
+            {
+                self::_set_callback($request);
+            }
         }
 
     }

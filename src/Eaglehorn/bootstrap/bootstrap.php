@@ -14,10 +14,6 @@ namespace Eaglehorn;
  * @desc           Fires up the application.
  */
 
-use Eaglehorn\error\ErrorHandler;
-
-require root . 'application/router.php';
-
 class bootstrap
 {
 
@@ -45,4 +41,5 @@ class bootstrap
 }
 
 $base = new Base($extended = false);
+require root . 'application/router.php';
 new bootstrap($base);
