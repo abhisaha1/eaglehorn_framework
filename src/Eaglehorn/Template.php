@@ -61,6 +61,7 @@ class Template extends Twig_Autoloader
      */
     public function injectCSS($file)
     {
+        $file = configItem('site')['url'].$file;
         $this->injections['css'][] = "<link href='$file' rel = 'stylesheet'>";
     }
 
@@ -71,6 +72,7 @@ class Template extends Twig_Autoloader
      */
     public function injectJS($file)
     {
+        $file = configItem('site')['url'].$file;
         $this->injections['js'][] = $file;
     }
 

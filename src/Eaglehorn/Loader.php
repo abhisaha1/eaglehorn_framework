@@ -63,7 +63,7 @@ class Loader
      * @param Logger $logger
      * @internal param Logger $logger
      */
-    public function __construct($logger)
+    public function __construct(Logger $logger)
     {
         $this->logger = $logger;
     }
@@ -254,6 +254,16 @@ class Loader
             {
                 die("You do not have access to this link :-)");
             }
+        }
+        else if(strpos($namespace,'controller') > 0)
+        {
+            Base::getInstance()->hook('404',array(
+                'file' => $ref_class,
+                'controller' => $class,
+                'method' => $method_name,
+                'message' => '404'
+            ));
+            die();
         }
 
         $this->clearCurrentLoader();
