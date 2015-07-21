@@ -70,7 +70,6 @@ class Logger extends AbstractLogger
      */
     public function __construct($logDirectory, $logLevelThreshold = LogLevel::DEBUG)
     {
-
         $loggerConfig = configItem('logger');
 
         if($loggerConfig['activate'])

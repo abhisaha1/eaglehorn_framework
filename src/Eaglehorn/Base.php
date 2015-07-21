@@ -25,6 +25,8 @@ class Base
      * @var object
      */
     private static $loaderInstance;
+    private static $errorHandlerInstance;
+    private static $loggerInstance;
     /**
      * Loads all the custom hooks called be user
      * @var array
@@ -63,8 +65,7 @@ class Base
     public function __construct($extended = true)
     {
 
-        $error = new error\ErrorHandler($this);
-        $error->setHandlers();
+        $this->setErrorHandler($this);
 
         self::$hooks = configItem('hooks');
 
@@ -95,8 +96,13 @@ class Base
         {
             $class_ns = __NAMESPACE__."\\Logger";
         }
+        if (!self::$loggerInstance) {
 
-        $this->logger = new $class_ns($loggerConfig['file'], $loggerConfig['level']);
+            self::$loggerInstance = new $class_ns($loggerConfig['file'], $loggerConfig['level']);
+
+        }
+
+        $this->logger = self::$loggerInstance;
     }
 
     /**
@@ -121,6 +127,19 @@ class Base
 
         }
         return self::$loaderInstance;
+    }
+
+    /**
+     * @param $logger
+     * @return Loader|object
+     */
+    public static function setErrorHandler(Base $base)
+    {
+        if (!self::$errorHandlerInstance) {
+
+            self::$errorHandlerInstance = new error\ErrorHandler($base);
+
+        }
     }
 
     /**

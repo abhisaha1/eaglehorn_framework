@@ -21,6 +21,7 @@ class ErrorHandler
     public function __construct(Base $base)
     {
         $this->base = $base;
+        $this->setHandlers();
     }
 
     // CATCHABLE ERRORS

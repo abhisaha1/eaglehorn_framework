@@ -31,7 +31,9 @@ class Template extends Twig_Autoloader
         Twig_Autoloader::register();
         $templates = configItem('site')['appdir'].'templates';
         $loader = new \Twig_Loader_Filesystem($templates);
-        $this->twig = new \Twig_Environment($loader);
+        $this->twig = new \Twig_Environment($loader,array(
+            'cache' => configItem('cache')['dir'],
+        ));
         $this->twigFunctions();
     }
 
