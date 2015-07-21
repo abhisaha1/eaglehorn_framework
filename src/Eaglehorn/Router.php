@@ -144,6 +144,7 @@ class Router
             if (self::fileExists($file = ucfirst(configItem('site')['cust_controller_dir']) . $controller . '.php',false)) {
                 self::$callback = array(ucFirst($controller), $method, self::$_attr);
             } else {
+                header("HTTP/1.0 404 Not Found");
                 self::$_base->hook('404',array(
                     'file' => $file,
                     'controller' => $controller,

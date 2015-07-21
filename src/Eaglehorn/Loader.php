@@ -116,7 +116,9 @@ class Loader
     {
         if (in_array($viewname, $this->viewset) === false) {
             $this->viewset[] = array($viewname, $data);
-            return new View(Base::getInstance());
+            $view = new View(Base::getInstance());
+            $this->loaderHooks($view,'pre_view',$class='',$method_name='',$data=array());
+            return $view;
         }
     }
 
@@ -250,13 +252,10 @@ class Loader
                 call_user_func_array(array($instance, $method_name), $data);
                 $this->loaderHooks($instance,"post_$last_hook",$class,$method_name,$data);
             }
-            else
-            {
-                die("You do not have access to this link :-)");
-            }
         }
         else if(strpos($namespace,'controller') > 0)
         {
+            header("HTTP/1.0 404 Not Found");
             Base::getInstance()->hook('404',array(
                 'file' => $ref_class,
                 'controller' => $class,
