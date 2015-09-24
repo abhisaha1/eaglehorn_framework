@@ -1,6 +1,5 @@
 <?php
 namespace Eaglehorn;
-use Twig_Autoloader;
 
 /**
  * EagleHorn
@@ -15,7 +14,7 @@ use Twig_Autoloader;
  * @desc           Responsible for rendering and parsing Templates
  */
 
-class Template extends Twig_Autoloader
+class Template
 {
     private $template_markup;
     private $injections = array();
@@ -28,7 +27,6 @@ class Template extends Twig_Autoloader
         foreach ($base->attr as $key => $value) {
             $this->$key = $value;
         }
-        Twig_Autoloader::register();
         $templates = configItem('site')['appdir'].'templates';
         $loader = new \Twig_Loader_Filesystem($templates);
         $this->twig = new \Twig_Environment($loader,array(
