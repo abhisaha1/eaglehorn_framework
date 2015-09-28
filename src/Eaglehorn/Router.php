@@ -87,6 +87,8 @@ class Router
         //make sure the request has a trailing slash
         $request = rtrim($request, '/') . '/';
 
+        $request = str_replace("//","/",$request);
+
         // Sort the array by priority
         ksort(self::$_routes);
 
