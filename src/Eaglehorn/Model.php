@@ -22,6 +22,7 @@ use PDOException;
 
 class Model {
 
+    private static $connection = false;
     function __construct()
     {
         $mysql      = configItem('mysql');
@@ -33,8 +34,11 @@ class Model {
 
         if($orm == 'Redbean')
         {
-            \R::setup( "mysql:host=$host;dbname=$db",
-                $user, $password );
+            if(!self::$connection) {
+                \R::setup( "mysql:host=$host;dbname=$db",
+                    $user, $password );
+                self::$connection = true;
+            }
 
         }
         else if ($orm == 'Eaglehorn')

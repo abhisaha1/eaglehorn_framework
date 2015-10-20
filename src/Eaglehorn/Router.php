@@ -63,7 +63,13 @@ class Router
         //first we separate the parameters
         $request = isset($_REQUEST['route']) ? $_REQUEST['route'] : '/';
 
+        if(strpos($request,'?') > 0) {
+            $split = explode('?',$request);
+            $request = $split[0];
+        }
+
         self::$_attr = array_slice(explode('/', trim($request, '/')), 2);
+
         self::_run($request);
 
         return self::$callback;

@@ -433,6 +433,19 @@ function getRandomString($length = 6)
 
     return $result;
 }
+/**
+ * Creates a random number of specified length
+ *
+ * @param int $length
+ * @return int
+ */
+function getRandomNumber($length = 6)
+{
+
+    $digits = 3;
+    return rand(pow(10, $length-1), pow(10, $length)-1);
+
+}
 
 /**
  * Get the user id from an email
@@ -469,6 +482,17 @@ if(!function_exists('addHttp'))
     }
 }
 
+if(!function_exists('get'))
+{
+    function get($para) {
+        $get_string = str_replace('?','&',$_GET['route']);
+        parse_str($get_string, $get_array);
+        if(isset($get_array[$para])) {
+            return $get_array[$para];
+        }
+        return null;
+    }
+}
 /**
  * @param $string
  * @return mixed

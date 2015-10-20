@@ -30,7 +30,7 @@ class Template
         $templates = configItem('site')['appdir'].'templates';
         $loader = new \Twig_Loader_Filesystem($templates);
         $this->twig = new \Twig_Environment($loader,array(
-            'cache' => configItem('cache')['dir'],
+            //'cache' => configItem('cache')['dir'],
         ));
         $this->twigFunctions();
     }

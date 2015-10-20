@@ -173,6 +173,8 @@ class Loader
 
                 $this->_loaded_controllers[$controller] = $class;
             }
+        }else{
+            $class = $this->_loaded_controllers[$controller];
         }
         $this->loading[] = 'controller';
         return $this->_createInstance($ns, $class, $params, $method_name, $data);
@@ -208,6 +210,8 @@ class Loader
 
                 $this->_loaded_models[$model] = $class;
             }
+        }else{
+            $class = $this->_loaded_models[$model];
         }
         $this->loading[] = 'model';
         return $this->_createInstance('application\model\\', $class, $params, $method_name, $data);
@@ -240,8 +244,9 @@ class Loader
 
             $instance = new $ns_class();
         }
+        
         $this->logger->info("$namespace object created for $class class");
-
+   
         //call the method along with parameters, if they exist !
         if (method_exists($instance, $method_name))
         {
@@ -252,6 +257,10 @@ class Loader
                 call_user_func_array(array($instance, $method_name), $data);
                 $this->loaderHooks($instance,"post_$last_hook",$class,$method_name,$data);
             }
+        }elseif(is_object($instance)) 
+        {
+            $last_hook = $this->loading[count($this->loading) - 1];
+            $this->loaderHooks($instance,"pre_$last_hook",$class,$method_name,$data);
         }
         else if(strpos($namespace,'controller') > 0)
         {
