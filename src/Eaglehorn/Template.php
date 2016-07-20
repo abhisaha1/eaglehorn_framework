@@ -73,7 +73,7 @@ class Template
     public function injectJS($file)
     {
         $file = configItem('site')['url'].$file;
-        $this->injections['js'][] = $file;
+        $this->injections['js'][] = "<script src='$file' type = 'text/javascript'></script>";
     }
 
     /**

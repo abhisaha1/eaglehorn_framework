@@ -177,6 +177,7 @@ class Loader
             $class = $this->_loaded_controllers[$controller];
         }
         $this->loading[] = 'controller';
+        $method_name = str_replace('-', '', lcfirst(ucwords($method_name, '-')));
         return $this->_createInstance($ns, $class, $params, $method_name, $data);
     }
 
